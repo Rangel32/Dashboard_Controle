@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard Controle Geral por Obra</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Inter',sans-serif;background:#f4f6fa;color:#1a2035;font-size:14px}.topo{background:#1a2035;color:#fff;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}.topo-titulo{font-size:17px;font-weight:700}.topo-sub{font-size:12px;color:#8892a8;margin-top:2px}.topo-salvo{font-size:12px;color:#4ade80;opacity:0;transition:opacity .4s}.topo-salvo.show{opacity:1}.abas{background:#fff;border-bottom:1px solid #e2e8f0;display:flex;padding:0 32px;position:sticky;top:61px;z-index:99;overflow:auto}.aba{padding:14px 20px;font-size:13px;font-weight:500;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}.aba:hover{color:#1a2035}.aba.ativa{color:#2563eb;border-bottom-color:#2563eb;font-weight:600}.conteudo{padding:28px 32px;max-width:1280px}.secao{display:none}.secao.ativa{display:block}.obra-bar{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.04);display:grid;grid-template-columns:1fr 180px 180px 150px;gap:12px;align-items:end}.cfg-label{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}.cfg-input{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 13px;font-size:14px;font-family:'Inter',sans-serif;color:#1a2035;outline:none;background:#f8fafc}.cfg-input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.1)}.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}.kpi{background:#fff;border-radius:12px;padding:18px 20px;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.04)}.kpi-label{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}.kpi-valor{font-size:22px;font-weight:700;color:#1a2035}.kpi-nota{font-size:11px;color:#94a3b8;margin-top:4px}.kpi-verde .kpi-valor{color:#16a34a}.kpi-azul .kpi-valor{color:#2563eb}.kpi-laranja .kpi-valor{color:#ea580c}.sec-titulo{font-size:16px;font-weight:700;color:#1a2035;margin-bottom:16px;display:flex;align-items:center;gap:8px}.sec-titulo::after{content:'';flex:1;height:1px;background:#e2e8f0}.tabela-wrap{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:auto;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.04)}table{width:100%;border-collapse:collapse}thead th{background:#f8fafc;padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #e2e8f0;white-space:nowrap}thead th.right{text-align:right}tbody tr{border-bottom:1px solid #f1f5f9}tbody tr:hover{background:#f8fafc}td{padding:0}.cel{padding:10px 14px;width:100%;min-height:38px;display:block;border:none;background:transparent;font-family:'Inter',sans-serif;font-size:13px;color:#1a2035;outline:none}.cel:focus{background:#eff6ff;outline:2px solid #2563eb;outline-offset:-2px;border-radius:4px}.cel-num{text-align:right;font-variant-numeric:tabular-nums}.cel-readonly{padding:10px 14px;font-size:13px;color:#64748b;font-variant-numeric:tabular-nums;text-align:right;display:block}.sel-status{padding:5px 10px;border-radius:20px;border:1px solid;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;outline:none;background:transparent}.s0{background:#f1f5f9;color:#64748b;border-color:#cbd5e1}.s1{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}.s2{background:#fef9c3;color:#854d0e;border-color:#fde047}.s3{background:#dcfce7;color:#15803d;border-color:#86efac}.s4{background:#fee2e2;color:#b91c1c;border-color:#fca5a5}.btn-add{margin:12px 14px;display:inline-flex;align-items:center;gap:6px;background:#eff6ff;color:#2563eb;border:1px dashed #93c5fd;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}.btn-add:hover{background:#dbeafe}.btn-del-linha{background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:16px;padding:0 12px}.btn-del-linha:hover{color:#ef4444}.alerta{display:flex;gap:12px;padding:14px 18px;border-radius:10px;margin-bottom:10px;font-size:13px;line-height:1.55;border:1px solid}.alerta strong{display:block;font-weight:700;margin-bottom:2px}.al-verde{background:#f0fdf4;border-color:#bbf7d0;color:#15803d}.al-azul{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}.al-laranja{background:#fff7ed;border-color:#fed7aa;color:#c2410c}.al-cinza{background:#f8fafc;border-color:#e2e8f0;color:#64748b}.barra-row{margin-bottom:12px}.barra-meta{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}.barra-label{color:#64748b;font-weight:500}.barra-val{color:#1a2035;font-weight:600}.barra-track{background:#f1f5f9;border-radius:4px;height:8px;overflow:hidden}.barra-fill{height:100%;border-radius:4px}.cards-obras{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.obra-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04);cursor:pointer}.obra-card:hover{border-color:#93c5fd;background:#eff6ff}.obra-card h3{font-size:14px;margin-bottom:8px}.mini{font-size:12px;color:#64748b;line-height:1.6}.dica{font-size:12px;color:#94a3b8;margin-bottom:12px;display:flex;align-items:center;gap:6px}.dica::before{content:'✏️';font-size:14px}.cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}.cfg-campo{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.cfg-full{grid-column:1/-1}.btn-salvar-cfg{background:#2563eb;color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}.upload-box{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.upload-grid{display:grid;grid-template-columns:1fr 220px 220px;gap:12px;align-items:end}.upload-help{font-size:12px;color:#64748b;line-height:1.5;margin-top:10px}.upload-actions{display:flex;gap:8px;flex-wrap:wrap}.btn-sec{background:#f8fafc;color:#1a2035;border:1px solid #cbd5e1;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}.btn-sec:hover{background:#eff6ff;border-color:#93c5fd;color:#2563eb}.btn-danger{background:#fff1f2;color:#b91c1c;border:1px solid #fecdd3;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}.btn-danger:hover{background:#fee2e2;border-color:#fca5a5;color:#991b1b}.acoes-tabela{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 14px}.aviso-perigo{font-size:12px;color:#b91c1c;font-weight:600}.cfg-total{font-size:20px;font-weight:700;color:#16a34a;padding:9px 0}.import-msg{font-size:12px;margin-top:10px;color:#15803d;font-weight:600}.import-msg.erro{color:#b91c1c}.mapa-box{display:none;margin-top:14px;border-top:1px solid #e2e8f0;padding-top:14px}.mapa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.mapa-grid label{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.04em}.mapa-grid select{margin-top:5px}.empr-resumo{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}.empr-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.badge-obra{display:inline-flex;align-items:center;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}.empr-total-row{background:#f8fafc;font-weight:700}.empr-total-row td{padding:10px 14px;color:#1a2035}.empr-select-obra{min-width:180px}@media(max-width:760px){#sec-obra [style*="grid-template-columns:1.2fr"]{grid-template-columns:1fr!important}.obra-bar{grid-template-columns:1fr}.conteudo{padding:16px}.abas{padding:0 16px}.cfg-grid{grid-template-columns:1fr}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="topo"><div><div class="topo-titulo" id="titulo-proj">Dashboard Controle Geral por Obra</div><div class="topo-sub">Controle financeiro · NFs · Levantamento editável</div></div><div class="topo-salvo" id="topo-salvo">✓ Salvo automaticamente</div></div>
+<div class="abas"><div class="aba ativa" onclick="ir('geral',this)">📊 Geral</div><div class="aba" onclick="ir('obra',this)">🏗️ Obra</div><div class="aba" onclick="ir('materiais',this)">📦 Levantamento</div><div class="aba" onclick="ir('empreiteiros',this)">👷 Empreiteiros</div><div class="aba" onclick="ir('nfs',this)">📋 NFs / Medições</div><div class="aba" onclick="ir('config',this)">⚙️ Dados da Obra</div></div>
+<div class="conteudo">
+  <div class="alerta al-azul" style="margin-bottom:16px"><div class="alerta-icon">☁️</div><div><strong>Modo Google Sheets</strong>As alterações são salvas na aba oculta <b>_DASHBOARD_DADOS</b> desta planilha. O painel também mantém cópia local no navegador como segurança.</div></div>
+  <div class="obra-bar"><div><div class="cfg-label">Selecionar obra</div><select id="obra-select" class="cfg-input" onchange="selecionarObra(+this.value)"></select></div><div><div class="cfg-label">Buscar obra</div><input id="busca" class="cfg-input" placeholder="Nome ou responsável" oninput="renderGeral()"></div><div><div class="cfg-label">Status</div><select id="filtro-status" class="cfg-input" onchange="renderGeral()"><option value="">Todas</option><option value="comsaldo">Com saldo</option><option value="quitada">Sem saldo</option></select></div><div><button class="btn-salvar-cfg" style="width:100%;padding:11px 12px" onclick="novaObra()">+ Nova obra</button></div></div>
+  <div class="secao ativa" id="sec-geral"><div class="kpi-row" id="kpis-geral"></div><div class="sec-titulo">Obras</div><button class="btn-add" onclick="novaObra()">+ Incluir nova obra</button><div class="cards-obras" id="cards-obras"></div></div>
+  <div class="secao" id="sec-obra"><div class="kpi-row" id="kpis-obra"></div><div class="sec-titulo">Evolução Financeira</div><div style="background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px 24px;margin-bottom:24px"><div style="display:grid;grid-template-columns:1.1fr .9fr .9fr;gap:24px;align-items:center"><div id="barras-obra"></div><div><div class="cfg-label" style="text-align:center;margin-bottom:8px">Contrato original</div><canvas id="grafico-fin-obra" style="max-height:300px"></canvas></div><div><div class="cfg-label" style="text-align:center;margin-bottom:8px">Aditivos</div><canvas id="grafico-aditivo-obra" style="max-height:300px"></canvas></div></div></div><div class="sec-titulo">Alertas e observações</div><div id="alertas-obra"></div></div>
+  <div class="secao" id="sec-materiais"><p class="dica">Levantamento é editável e ficam separados por obra. As alterações ficam salvas neste navegador.</p><div class="upload-box"><div class="upload-grid"><div><div class="cfg-label">Upload de Excel para levantamento desta obra</div><input id="excel-materiais" class="cfg-input" type="file" accept=".xlsx,.xls,.csv" onchange="prepararImportMateriais(event)"></div><div><div class="cfg-label">Ação</div><select id="modo-import-mat" class="cfg-input"><option value="append">Adicionar ao final</option><option value="replace">Substituir levantamento da obra</option></select></div><div class="upload-actions"><button class="btn-sec" onclick="baixarModeloMateriais()">Baixar modelo CSV</button><button class="btn-add" onclick="confirmarImportMateriais()" style="margin:0">Importar</button></div></div><div class="upload-help">Colunas aceitas: Descrição/Material/Item, Marca, Categoria, Qtd/Quantidade, Custo Unitário, Venda Unitária e Status. A importação entra somente no levantamento da obra selecionada.</div><div id="msg-import-mat" class="import-msg"></div><div id="mapa-import-mat" class="mapa-box"><div class="cfg-label">Conferir mapeamento das colunas</div><div class="mapa-grid" id="mapa-import-grid"></div></div></div><div class="tabela-wrap"><table><thead><tr><th>#</th><th>Descrição do Item</th><th>Marca</th><th>Categoria</th><th class="right">Qtd</th><th class="right">Custo Unit. (R$)</th><th class="right">Venda Unit. (R$)</th><th class="right">Total Custo</th><th class="right">Total Venda</th><th>Status</th><th></th></tr></thead><tbody id="corpo-mat"></tbody></table><div class="acoes-tabela"><button class="btn-add" onclick="novoMaterial()" style="margin:0">+ Adicionar item</button><button class="btn-danger" onclick="apagarTodosMateriais()">Apagar todo o levantamento</button><span class="aviso-perigo">Exige dupla confirmação</span></div></div></div>
+  <div class="secao" id="sec-empreiteiros">
+    <p class="dica">Cadastre os empreiteiros vinculados à obra selecionada. O saldo a receber é calculado automaticamente pelo contrato menos pagamentos.</p>
+    <div class="empr-resumo" id="kpis-empreiteiros"></div>
+    <div class="upload-box">
+      <div class="empr-toolbar">
+        <span class="badge-obra" id="empr-obra-label">Obra selecionada</span>
+        <button class="btn-add" onclick="novoEmpreiteiro()" style="margin:0">+ Novo empreiteiro</button>
+      </div>
+      <div class="upload-help">Cada empreiteiro fica salvo dentro da obra atual. Para vincular em outra obra, selecione outra obra no topo antes de cadastrar.</div>
+    </div>
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Empreiteiro</th>
+            <th>Serviço / Função</th>
+            <th class="right">Valor Contrato</th>
+            <th class="right">Valor Pago</th>
+            <th class="right">Falta Receber</th>
+            <th>Status</th>
+            <th>Observação</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="corpo-empreiteiros"></tbody>
+      </table>
+      <button class="btn-add" onclick="novoEmpreiteiro()">+ Adicionar empreiteiro</button>
+    </div>
+  </div>
+  <div class="secao" id="sec-nfs"><p class="dica">NFs e medições importadas da planilha. Você também pode editar status, valor e observações.</p><div class="tabela-wrap"><table><thead><tr><th>#</th><th>Nota</th><th class="right">Valor</th><th>Origem</th><th>Data de emissão</th><th>Status</th><th>Observação</th><th></th></tr></thead><tbody id="corpo-nfs"></tbody></table><button class="btn-add" onclick="novaNF()">+ Adicionar NF</button></div></div>
+  <div class="secao" id="sec-config">
+    <p class="dica">Dados gerais da obra selecionada. O contrato total é calculado pelo contrato original somado a todos os aditivos cadastrados.</p>
+    <div class="cfg-grid">
+      <div class="cfg-campo"><div class="cfg-label">Nome da obra</div><input class="cfg-input" id="cfg-nome"></div>
+      <div class="cfg-campo"><div class="cfg-label">Responsável</div><input class="cfg-input" id="cfg-resp"></div>
+      <div class="cfg-campo"><div class="cfg-label">Contrato original</div><input class="cfg-input" id="cfg-contrato" type="number" step="0.01" oninput="atualizarTotalContratoCfg()"></div>
+      <div class="cfg-campo"><div class="cfg-label">Total de aditivos</div><div class="cfg-total" id="cfg-total-aditivos">R$ 0,00</div></div>
+      <div class="cfg-campo"><div class="cfg-label">Contrato total</div><div class="cfg-total" id="cfg-contrato-total">R$ 0,00</div></div>
+      <div class="cfg-campo"><div class="cfg-label">Medido</div><input class="cfg-input" id="cfg-medido" type="number" step="0.01"></div>
+      <div class="cfg-campo"><div class="cfg-label">Saldo calculado</div><input class="cfg-input" id="cfg-saldo" type="text" readonly title="Contrato total menos valor emitido"></div>
+      <div class="cfg-campo"><div class="cfg-label">ART</div><input class="cfg-input" id="cfg-art"></div>
+      <div class="cfg-campo cfg-full"><div class="cfg-label">Observações</div><textarea class="cfg-input" id="cfg-obs" rows="4"></textarea></div>
+    </div>
+    <div class="sec-titulo">Aditivos da Obra</div>
+    <p class="dica">Cadastre quantos aditivos forem necessários. As NFs podem ser vinculadas ao contrato original ou a um aditivo específico.</p>
+    <div class="tabela-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Nº / Nome</th><th>Descrição</th><th>Data</th><th class="right">Valor</th><th></th></tr></thead>
+        <tbody id="corpo-aditivos"></tbody>
+      </table>
+      <button class="btn-add" onclick="novoAditivo()">+ Adicionar aditivo</button>
+    </div>
+    <button class="btn-salvar-cfg" onclick="salvarConfig()">Salvar Dados da Obra</button><button class="btn-sec" style="margin-left:10px" onclick="novaObra()">+ Criar nova obra</button>
+  </div>
+</div>
+<script>
+const CHAVE='controle_geral_por_obra_v1';
+const DADOS_ORIGINAIS=[{"id": 1, "responsavel": "JACKSON", "nome": "TRT 10º", "contrato": 499565.99, "medido": 499565.99, "saldo": 0.0, "observacao": "nota emitda falta ateste", "art": "OK", "sheet": "TRT10", "nfs": [{"nota": "NF 628", "valor": 351682.88, "data": "2025-12-15", "status": "PAGO"}, {"nota": "NF 620", "valor": 147883.11, "data": "2026-03-10", "status": "PAGO"}], "materiais": []}, {"id": 2, "responsavel": "JACKSON", "nome": "NELSON HUNGRIA", "contrato": 1300569.0, "medido": 1300569.0, "saldo": 0.0, "observacao": "volta do victor", "art": "OK", "sheet": "NELSON HUNGRIA", "nfs": [{"nota": "NF 560", "valor": 1300569.0, "data": "2025-12-18", "status": "PAGO"}], "materiais": []}, {"id": 3, "responsavel": "JACKSON", "nome": "SEJUSP", "contrato": 12216372.29, "medido": 8739522.66, "saldo": 3476849.63, "observacao": "materiais mais dmedições", "art": "OK", "sheet": "SEJUSP", "nfs": [{"nota": "NF 191", "valor": 148700.0, "data": "2024-12-18", "status": "CSE UBERLANDIA"}, {"nota": "NF 192", "valor": 26757.39, "data": "2024-12-18", "status": "CSE UBERLANDIA"}, {"nota": "NF 193", "valor": 43350.0, "data": "2024-12-18", "status": "DAS UBERLANDIA"}, {"nota": "NF 194", "valor": 10333.5, "data": "2024-12-18", "status": "DAS UBERLANDIA"}, {"nota": "NF 195", "valor": 255600.0, "data": "2024-12-18", "status": "BICAS II"}, {"nota": "NF 196", "valor": 35060.76, "data": "2024-12-18", "status": "BICAS II"}, {"nota": "NF 197", "valor": 87550.0, "data": "2024-12-18", "status": "N. S. CARMO"}, {"nota": "NF 198", "valor": 37090.89, "data": "2024-12-18", "status": "N. S. CARMO"}, {"nota": "NF 199", "valor": 102300.0, "data": "2024-12-18", "status": "BETIM"}, {"nota": "NF 200", "valor": 26757.39, "data": "2024-12-18", "status": "BETIM"}, {"nota": "NF 201", "valor": 10333.5, "data": "2024-12-18", "status": "DAS BELO HORIZONTE"}, {"nota": "NF 202", "valor": 19200.0, "data": "2024-12-18", "status": "DAS BELO HORIZONTE"}, {"nota": "NF 203", "valor": 19200.0, "data": "2024-12-18", "status": "DAS MONTES CLAROS"}, {"nota": "NF 204", "valor": 10333.5, "data": "2024-12-18", "status": "DAS MONTES CLAROS"}, {"nota": "NF 205", "valor": 54200.0, "data": "2024-12-18", "status": "ALMOX"}, {"nota": "NF 206", "valor": 10333.5, "data": "2024-12-18", "status": "ALMOX"}, {"nota": "NF 207", "valor": 57600.0, "data": "2024-12-18", "status": "ALMOX"}, {"nota": "NF 208", "valor": 10333.5, "data": "2024-12-18", "status": "ALMOX"}, {"nota": "NF 214", "valor": 38103.0, "data": "2024-12-20", "status": "CSE UBERLANDIA"}, {"nota": "NF 215", "valor": 7738.2, "data": "2024-12-20", "status": "DAS UBERLANDIA"}, {"nota": "NF 218", "valor": 145150.0, "data": "2025-01-13", "status": "N. S. CARMO"}, {"nota": "NF 219", "valor": 136450.0, "data": "2025-01-13", "status": "BICAS II"}, {"nota": "NF 220", "valor": 94750.0, "data": "2025-01-13", "status": "BETIM"}, {"nota": "NF 221", "valor": 44000.0, "data": "2025-01-13", "status": "CSE UBERLANDIA"}, {"nota": "NF 222", "valor": 55600.0, "data": "2025-01-13", "status": "DAS BELO HORIZONTE"}, {"nota": "NF 223", "valor": 55600.0, "data": "2025-01-13", "status": "DAS MONTES CLAROS"}, {"nota": "NF 224", "valor": 44000.0, "data": "2025-01-13", "status": "DAS UBERLANDIA"}, {"nota": "NF 225", "valor": 109000.0, "data": "2025-01-13", "status": "ALMOX"}, {"nota": "NF 226", "valor": 80000.0, "data": "2025-01-13", "status": "ALMOX"}, {"nota": "NF 229", "valor": 175000.0, "data": "2025-01-31", "status": "MURIAE"}, {"nota": "NF 230", "valor": 175000.0, "data": "2025-01-31", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 231", "valor": 385000.0, "data": "2025-01-31", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 232", "valor": 175000.0, "data": "2025-01-31", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 233", "valor": 140000.0, "data": "2025-01-31", "status": "PIO CANEDO"}, {"nota": "NF 236", "valor": 70000.0, "data": "2025-02-06", "status": "DRUMOND"}, {"nota": "NF 241", "valor": 18055.8, "data": "2025-02-20", "status": "ALMOX"}, {"nota": "NF 242", "valor": 11865.24, "data": "2025-02-20", "status": "ALMOX"}, {"nota": "NF 319", "valor": 55970.86, "data": "2025-07-11", "status": "N. S. CARMO"}, {"nota": "NF 331", "valor": 100000.0, "data": "2025-07-28", "status": "DRUMOND"}, {"nota": "NF 332", "valor": 5200.0, "data": "2025-07-28", "status": "MURIAE"}, {"nota": "NF 335", "valor": 24000.0, "data": "2025-08-06", "status": "MURIAE"}, {"nota": "NF 336", "valor": 24000.0, "data": "2025-08-06", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 337", "valor": 24000.0, "data": "2025-08-06", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 338", "valor": 24000.0, "data": "2025-08-06", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 339", "valor": 24000.0, "data": "2025-08-06", "status": "PIO CANEDO"}, {"nota": "NF 340", "valor": 4000.0, "data": "2025-08-06", "status": "PJMA"}, {"nota": "NF 341", "valor": 37700.0, "data": "2025-08-07", "status": "DRUMOND"}, {"nota": "NF 342", "valor": 130500.0, "data": "2025-08-07", "status": "MURIAE"}, {"nota": "NF 343", "valor": 172550.0, "data": "2025-08-07", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 344", "valor": 174000.0, "data": "2025-08-07", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 345", "valor": 130500.0, "data": "2025-08-07", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 346", "valor": 130500.0, "data": "2025-08-07", "status": "PIO CANEDO"}, {"nota": "NF 352", "valor": 6190.56, "data": "2025-08-19", "status": "DAS BELO HORIZONTE"}, {"nota": "NF 369", "valor": 1450.0, "data": "2025-09-02", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 400", "valor": 25800.0, "data": "2025-09-12", "status": "DRUMOND"}, {"nota": "NF 401", "valor": 33600.0, "data": "2025-09-12", "status": "MURIAE"}, {"nota": "NF 402", "valor": 7800.0, "data": "2025-09-12", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 403", "valor": 7800.0, "data": "2025-09-12", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 404", "valor": 7800.0, "data": "2025-09-12", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 405", "valor": 7800.0, "data": "2025-09-12", "status": "PIO CANEDO"}, {"nota": "NF 416", "valor": 5400.0, "data": "2025-09-22", "status": "DRUMOND"}, {"nota": "NF 417", "valor": 11675.52, "data": "2025-09-22", "status": "DRUMOND"}, {"nota": "NF 418", "valor": 18000.0, "data": "2025-09-22", "status": "MURIAE"}, {"nota": "NF 419", "valor": 25296.96, "data": "2025-09-22", "status": "MURIAE"}, {"nota": "NF 420", "valor": 21600.0, "data": "2025-09-22", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 421", "valor": 27242.88, "data": "2025-09-22", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 423", "valor": 5200.0, "data": "2025-09-22", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 424", "valor": 18000.0, "data": "2025-09-22", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 425", "valor": 25296.96, "data": "2025-09-22", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 426", "valor": 5200.0, "data": "2025-09-22", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 427", "valor": 21600.0, "data": "2025-09-22", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 428", "valor": 31134.72, "data": "2025-09-22", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 429", "valor": 5200.0, "data": "2025-09-22", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 430", "valor": 39650.64, "data": "2025-09-22", "status": "BETIM"}, {"nota": "NF 433", "valor": 25296.96, "data": "2025-09-23", "status": "PIO CANEDO"}, {"nota": "NF434", "valor": 18000.0, "data": "2025-09-23", "status": "PIO CANEDO"}, {"nota": "NF435", "valor": 5200.0, "data": "2025-09-23", "status": "PIO CANEDO"}, {"nota": "NF 444", "valor": 30100.0, "data": "2025-09-26", "status": "MURIAE"}, {"nota": "NF 445", "valor": 55900.0, "data": "2025-09-26", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 446", "valor": 55900.0, "data": "2025-09-26", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 447", "valor": 73100.0, "data": "2025-09-26", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 448", "valor": 55900.0, "data": "2025-09-26", "status": "PIO CANEDO"}, {"nota": "NF 530", "valor": 37915.2, "data": "2025-11-04", "status": "DRUMOND"}, {"nota": "NF 531", "valor": 8745.11, "data": "2025-11-04", "status": "DRUMOND"}, {"nota": "NF 532", "valor": 8745.11, "data": "2025-11-04", "status": "DRUMOND"}, {"nota": "NF 533", "valor": 58979.2, "data": "2025-11-04", "status": "DRUMOND"}, {"nota": "NF 534", "valor": 3686.2, "data": "2025-11-04", "status": "PATOS DE MINAS"}, {"nota": "NF 535", "valor": 3686.2, "data": "2025-11-04", "status": "UNAÍ"}, {"nota": "NF 536", "valor": 180623.8, "data": "2025-11-04", "status": "UBÁ"}, {"nota": "NF 537", "valor": 22117.2, "data": "2025-11-04", "status": "ALMOX"}, {"nota": "NF 538", "valor": 26235.33, "data": "2025-11-04", "status": "MURIAE"}, {"nota": "NF 539", "valor": 26235.33, "data": "2025-11-04", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 540", "valor": 17490.22, "data": "2025-11-04", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 541", "valor": 37915.2, "data": "2025-11-04", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 542", "valor": 26235.33, "data": "2025-11-04", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 543", "valor": 26235.33, "data": "2025-11-04", "status": "PIO CANEDO"}, {"nota": "NF 565", "valor": 37915.2, "data": "2025-11-17", "status": "MURIAE"}, {"nota": "NF 566", "valor": 37915.2, "data": "2025-11-17", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 567", "valor": 37915.2, "data": "2025-11-17", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 568", "valor": 37915.2, "data": "2025-11-17", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 577", "valor": 37915.2, "data": "2025-11-27", "status": "PIO CANEDO"}, {"nota": "NF 578", "valor": 8745.11, "data": "2025-11-27", "status": "UBÁ"}, {"nota": "NF 579", "valor": 8745.11, "data": "2025-11-27", "status": "ALMOX"}, {"nota": "NF 580", "valor": 37915.2, "data": "2025-11-27", "status": "UNAÍ"}, {"nota": "NF 581", "valor": 37915.2, "data": "2025-11-27", "status": "PATOS DE MINAS"}, {"nota": "NF 582", "valor": 8745.11, "data": "2025-11-27", "status": "PIMENTA DE VEIGA"}, {"nota": "NFSE 286", "valor": 77168.0, "data": "2025-01-14", "status": "CSE UBERLANDIA"}, {"nota": "NFSE 287", "valor": 120204.0, "data": "2025-01-14", "status": "N. S. CARMO"}, {"nota": "NFSE 288", "valor": 179564.0, "data": "2025-01-14", "status": "BICAS II"}, {"nota": "NFSE 289", "valor": 81620.0, "data": "2025-01-14", "status": "BETIM"}, {"nota": "NFSE 290", "valor": 47488.0, "data": "2025-01-14", "status": "ALMOX"}, {"nota": "NFSE 291", "valor": 29680.0, "data": "2025-01-14", "status": "ALMOX"}, {"nota": "NFSE 292", "valor": 14840.0, "data": "2025-01-14", "status": "DAS BELO HORIZONTE"}, {"nota": "NFSE 293", "valor": 14840.0, "data": "2025-01-14", "status": "DAS MONTES CLAROS"}, {"nota": "NFSE 294", "valor": 19292.0, "data": "2025-01-14", "status": "DAS UBERLANDIA"}, {"nota": "NFSE 334", "valor": 78000.0, "data": "2025-06-05", "status": "CSE UBERLANDIA"}, {"nota": "NFSE 335", "valor": 22000.0, "data": "2025-06-05", "status": "DAS UBERLANDIA"}, {"nota": "NFSE 344", "valor": 42000.0, "data": "2025-07-09", "status": "ALMOX"}, {"nota": "NFSE 345", "valor": 30000.0, "data": "2025-07-09", "status": "ALMOX"}, {"nota": "NFSE 386", "valor": 110000.0, "data": "2025-07-11", "status": "N. S. CARMO"}, {"nota": "NFSE 434", "valor": 19000.0, "data": "2025-08-19", "status": "DAS BELO HORIZONTE"}, {"nota": "NFSE 435", "valor": 237760.0, "data": "2025-08-19", "status": "PIO CANEDO"}, {"nota": "NFSE 436", "valor": 160272.0, "data": "2025-08-19", "status": "DRUMOND"}, {"nota": "NFSE 437", "valor": 246664.0, "data": "2025-08-19", "status": "MURIAE"}, {"nota": "NFSE 438", "valor": 341640.0, "data": "2025-08-19", "status": "FRANCISCO DE SÁ"}, {"nota": "NFSE 439", "valor": 294152.0, "data": "2025-08-19", "status": "PIMENTA DE VEIGA"}, {"nota": "NFSE 440", "valor": 288216.0, "data": "2025-08-19", "status": "TRÊS CORAÇÕES"}, {"nota": "NFSE 478", "valor": 81000.0, "data": "2025-09-23", "status": "BETIM"}, {"nota": "NF 765", "valor": 70163.69, "data": "2026-03-23", "status": "PIO CANEDO"}, {"nota": "NF 766", "valor": 29933.82, "data": "2026-03-23", "status": "PIO CANEDO"}, {"nota": "NFSE 640", "valor": 222225.2, "data": "2026-03-23", "status": "PIO CANEDO"}, {"nota": "NF 783", "valor": 104591.4, "data": "2026-04-02", "status": "FRANCISCO DE SÁ"}, {"nota": "NFSE 644", "valor": 312800.4, "data": "2026-04-02", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 791", "valor": 23519.43, "data": "2026-04-13", "status": "FRANCISCO DE SÁ"}], "materiais": []}, {"id": 4, "responsavel": "JACKSON", "nome": "TRINDADE", "contrato": 6998572.0, "medido": 5964016.0, "saldo": 1034556.0, "observacao": "pagamento da nota", "art": "OK", "sheet": "TRINDADE", "nfs": [{"nota": "NF 305", "valor": 92000.0, "data": "2025-06-16", "status": "PAGO"}, {"nota": "NF 307", "valor": 2047426.0, "data": "2025-06-18", "status": "PAGO"}, {"nota": "NF 308", "valor": 128000.0, "data": "2025-06-18", "status": "PAGO"}, {"nota": "NF 309", "valor": 691000.0, "data": "2025-06-18", "status": "PAGO"}, {"nota": "NF 310", "valor": 148000.0, "data": "2025-06-18", "status": "PAGO"}, {"nota": "NF 356", "valor": 42214.0, "data": "2025-08-21", "status": "PAGO"}, {"nota": "NF 441", "valor": 1995000.0, "data": "2025-08-21", "status": "PAGO"}, {"nota": "NF 358", "valor": 114000.0, "data": "2025-08-25", "status": "PAGO"}, {"nota": "NF 357", "valor": 102420.0, "data": "2025-08-21", "status": "PAGO"}, {"nota": "NF 622", "valor": 362780.0, "data": "2025-12-11", "status": "EMITIDA"}, {"nota": "NF 767", "valor": 21276.0, "data": "2026-03-23", "status": "EMITIDA"}, {"nota": "NF 768", "valor": 219900.0, "data": "2026-03-23", "status": "EMITIDA"}], "materiais": []}, {"id": 5, "responsavel": "JACKSON", "nome": "MUTUA", "contrato": 3695692.0, "medido": 3378250.5, "saldo": 317441.5, "observacao": "chegada dos materias", "art": "OK", "sheet": "MÚTUA", "nfs": [{"nota": "NF 414", "valor": 15080.0, "data": "2025-07-16", "status": "PAGO"}, {"nota": "NF 409", "valor": 15000.0, "data": "2025-07-16", "status": "PAGO"}, {"nota": "NF 323", "valor": 1124185.0, "data": "2025-07-16", "status": "PAGO"}, {"nota": "NF 350", "valor": 214695.0, "data": "2025-08-18", "status": "PAGO"}, {"nota": "NF 372", "valor": 445500.0, "data": "2025-09-03", "status": "PAGO"}, {"nota": "NF 552", "valor": 6750.0, "data": "2025-12-04", "status": "PAGO"}, {"nota": "NF 551", "valor": 7800.0, "data": "2025-12-04", "status": "PAGO"}, {"nota": "NF 550", "valor": 6000.0, "data": "2025-12-04", "status": "PAGO"}, {"nota": "NF 549", "valor": 11660.0, "data": "2025-12-04", "status": "PAGO"}, {"nota": "NF 548", "valor": 20800.0, "data": "2025-12-04", "status": "PAGO"}, {"nota": "NF 595", "valor": 65678.0, "data": "2025-12-04", "status": "PAGO"}, {"nota": "NF 609", "valor": 256439.0, "data": "2025-12-08", "status": "PAGO"}, {"nota": "NF 694", "valor": 1108723.5, "data": "2026-02-10", "status": "PAGO"}, {"nota": "NF 584", "valor": 29400.0, "data": "2026-02-10", "status": "PAGO"}, {"nota": "NF 585", "valor": 24040.0, "data": "2026-02-10", "status": "PAGO"}, {"nota": "NF 586", "valor": 26500.0, "data": "2026-02-10", "status": "PAGO"}], "materiais": []}, {"id": 6, "responsavel": "JACKSON", "nome": "FUNDAC", "contrato": 490981.0, "medido": 490981.0, "saldo": 0.0, "observacao": "pagamento da notra", "art": "NÃO", "sheet": "FUNDAÇÃO HELENA ", "nfs": [{"nota": "NOBREAK", "valor": 28736.36, "data": "2025-01-20", "status": "PAGO"}, {"nota": "ESCOLA MODULAR", "valor": 162322.63, "data": "2025-01-20", "status": "PAGO"}, {"nota": "ESCOLA TECNICA", "valor": 12610.2, "data": "2025-02-19", "status": "PAGO"}, {"nota": "ESCOLA SANDOVAL", "valor": 1032156.49, "data": "2025-02-19", "status": "PAGO"}, {"nota": "PLUG MINAS", "valor": 488604.76, "data": "2025-02-19", "status": "PAGO"}, {"nota": "FIBRA FHA", "valor": 166556.67, "data": "2025-02-19", "status": "PAGO"}, {"nota": "ESCOLA MODULAR", "valor": 75528.77, "data": "2025-02-21", "status": "PAGO"}, {"nota": "ESCOLA SANDOVAL", "valor": 146413.56, "data": "2025-03-18", "status": "PAGO"}, {"nota": "ESCOLA SANDOVAL", "valor": 221332.57, "data": "2025-05-14", "status": "PAGO"}, {"nota": "REPARO FIBRA", "valor": 15134.19, "data": "2025-06-12", "status": "PAGO"}, {"nota": "ESCOLA TECNICA", "valor": 140494.01, "data": "2025-07-11", "status": "PAGO"}, {"nota": "ESCOLA SANDOVAL", "valor": 12639.6, "data": "2025-08-11", "status": "PAGO"}, {"nota": "ESCOLA TECNICA", "valor": 189638.73, "data": "2025-08-11", "status": "PAGO"}, {"nota": "ESCOLA TECNICA", "valor": 169635.44, "data": "2025-09-11", "status": "PAGO"}, {"nota": "CASA DA MULHER + PSCICO + FISIO", "valor": 408440.87, "data": "2025-10-14", "status": "PAGO"}, {"nota": "SWITCH", "valor": 194400.0, "data": "2025-10-17", "status": "PAGO"}, {"nota": "FUNDAÇÃO HELENA", "valor": 541184.0, "data": "2025-12-11", "status": "PAGO"}, {"nota": "PLUG MINAS", "valor": 274580.92, "data": "2025-12-11", "status": "PAGO"}, {"nota": "FUNDAÇÃO HELENA", "valor": 498972.19, "data": "2025-12-20", "status": "PAGO"}, {"nota": "PLUG MINAS", "valor": 109414.44, "data": "2025-12-20", "status": "PAGO"}, {"nota": "FUNDAÇÃO HELENA", "valor": 349263.42, "data": "2026-03-04", "status": "PAGO"}, {"nota": "PLUG MINAS BLOCO 01", "valor": 234778.23, "data": "2026-04-13", "status": "EMITIDA"}], "materiais": []}, {"id": 7, "responsavel": "JACKSON", "nome": "FUNDAÇÃO HELENA", "contrato": 16638693.82, "medido": 5472838.05, "saldo": 11165855.77, "observacao": "compra dos materiasi para executar + iluminação", "art": "OK", "sheet": "FUNDAÇÃO HELENA ", "nfs": [{"nota": "NOBREAK", "valor": 28736.36, "data": "2025-01-20", "status": "PAGO"}, {"nota": "ESCOLA MODULAR", "valor": 162322.63, "data": "2025-01-20", "status": "PAGO"}, {"nota": "ESCOLA TECNICA", "valor": 12610.2, "data": "2025-02-19", "status": "PAGO"}, {"nota": "ESCOLA SANDOVAL", "valor": 1032156.49, "data": "2025-02-19", "status": "PAGO"}, {"nota": "PLUG MINAS", "valor": 488604.76, "data": "2025-02-19", "status": "PAGO"}, {"nota": "FIBRA FHA", "valor": 166556.67, "data": "2025-02-19", "status": "PAGO"}, {"nota": "ESCOLA MODULAR", "valor": 75528.77, "data": "2025-02-21", "status": "PAGO"}, {"nota": "ESCOLA SANDOVAL", "valor": 146413.56, "data": "2025-03-18", "status": "PAGO"}, {"nota": "ESCOLA SANDOVAL", "valor": 221332.57, "data": "2025-05-14", "status": "PAGO"}, {"nota": "REPARO FIBRA", "valor": 15134.19, "data": "2025-06-12", "status": "PAGO"}, {"nota": "ESCOLA TECNICA", "valor": 140494.01, "data": "2025-07-11", "status": "PAGO"}, {"nota": "ESCOLA SANDOVAL", "valor": 12639.6, "data": "2025-08-11", "status": "PAGO"}, {"nota": "ESCOLA TECNICA", "valor": 189638.73, "data": "2025-08-11", "status": "PAGO"}, {"nota": "ESCOLA TECNICA", "valor": 169635.44, "data": "2025-09-11", "status": "PAGO"}, {"nota": "CASA DA MULHER + PSCICO + FISIO", "valor": 408440.87, "data": "2025-10-14", "status": "PAGO"}, {"nota": "SWITCH", "valor": 194400.0, "data": "2025-10-17", "status": "PAGO"}, {"nota": "FUNDAÇÃO HELENA", "valor": 541184.0, "data": "2025-12-11", "status": "PAGO"}, {"nota": "PLUG MINAS", "valor": 274580.92, "data": "2025-12-11", "status": "PAGO"}, {"nota": "FUNDAÇÃO HELENA", "valor": 498972.19, "data": "2025-12-20", "status": "PAGO"}, {"nota": "PLUG MINAS", "valor": 109414.44, "data": "2025-12-20", "status": "PAGO"}, {"nota": "FUNDAÇÃO HELENA", "valor": 349263.42, "data": "2026-03-04", "status": "PAGO"}, {"nota": "PLUG MINAS BLOCO 01", "valor": 234778.23, "data": "2026-04-13", "status": "EMITIDA"}], "materiais": []}, {"id": 8, "responsavel": "JACKSON", "nome": "CTA CFTV", "contrato": 1362272.7, "medido": 873749.68, "saldo": 488523.02, "observacao": "compra dos suportes + intelbras", "art": "OK", "sheet": "CTA CFTV", "nfs": [], "materiais": []}, {"id": 9, "responsavel": "JACKSON", "nome": "SEJUSP ESTAÇÕES", "contrato": 668874.0, "medido": 34916.0, "saldo": 633958.0, "observacao": "compra dos equipamentos norion", "art": "NÃO", "sheet": "SEJUSP", "nfs": [{"nota": "NF 191", "valor": 148700.0, "data": "2024-12-18", "status": "CSE UBERLANDIA"}, {"nota": "NF 192", "valor": 26757.39, "data": "2024-12-18", "status": "CSE UBERLANDIA"}, {"nota": "NF 193", "valor": 43350.0, "data": "2024-12-18", "status": "DAS UBERLANDIA"}, {"nota": "NF 194", "valor": 10333.5, "data": "2024-12-18", "status": "DAS UBERLANDIA"}, {"nota": "NF 195", "valor": 255600.0, "data": "2024-12-18", "status": "BICAS II"}, {"nota": "NF 196", "valor": 35060.76, "data": "2024-12-18", "status": "BICAS II"}, {"nota": "NF 197", "valor": 87550.0, "data": "2024-12-18", "status": "N. S. CARMO"}, {"nota": "NF 198", "valor": 37090.89, "data": "2024-12-18", "status": "N. S. CARMO"}, {"nota": "NF 199", "valor": 102300.0, "data": "2024-12-18", "status": "BETIM"}, {"nota": "NF 200", "valor": 26757.39, "data": "2024-12-18", "status": "BETIM"}, {"nota": "NF 201", "valor": 10333.5, "data": "2024-12-18", "status": "DAS BELO HORIZONTE"}, {"nota": "NF 202", "valor": 19200.0, "data": "2024-12-18", "status": "DAS BELO HORIZONTE"}, {"nota": "NF 203", "valor": 19200.0, "data": "2024-12-18", "status": "DAS MONTES CLAROS"}, {"nota": "NF 204", "valor": 10333.5, "data": "2024-12-18", "status": "DAS MONTES CLAROS"}, {"nota": "NF 205", "valor": 54200.0, "data": "2024-12-18", "status": "ALMOX"}, {"nota": "NF 206", "valor": 10333.5, "data": "2024-12-18", "status": "ALMOX"}, {"nota": "NF 207", "valor": 57600.0, "data": "2024-12-18", "status": "ALMOX"}, {"nota": "NF 208", "valor": 10333.5, "data": "2024-12-18", "status": "ALMOX"}, {"nota": "NF 214", "valor": 38103.0, "data": "2024-12-20", "status": "CSE UBERLANDIA"}, {"nota": "NF 215", "valor": 7738.2, "data": "2024-12-20", "status": "DAS UBERLANDIA"}, {"nota": "NF 218", "valor": 145150.0, "data": "2025-01-13", "status": "N. S. CARMO"}, {"nota": "NF 219", "valor": 136450.0, "data": "2025-01-13", "status": "BICAS II"}, {"nota": "NF 220", "valor": 94750.0, "data": "2025-01-13", "status": "BETIM"}, {"nota": "NF 221", "valor": 44000.0, "data": "2025-01-13", "status": "CSE UBERLANDIA"}, {"nota": "NF 222", "valor": 55600.0, "data": "2025-01-13", "status": "DAS BELO HORIZONTE"}, {"nota": "NF 223", "valor": 55600.0, "data": "2025-01-13", "status": "DAS MONTES CLAROS"}, {"nota": "NF 224", "valor": 44000.0, "data": "2025-01-13", "status": "DAS UBERLANDIA"}, {"nota": "NF 225", "valor": 109000.0, "data": "2025-01-13", "status": "ALMOX"}, {"nota": "NF 226", "valor": 80000.0, "data": "2025-01-13", "status": "ALMOX"}, {"nota": "NF 229", "valor": 175000.0, "data": "2025-01-31", "status": "MURIAE"}, {"nota": "NF 230", "valor": 175000.0, "data": "2025-01-31", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 231", "valor": 385000.0, "data": "2025-01-31", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 232", "valor": 175000.0, "data": "2025-01-31", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 233", "valor": 140000.0, "data": "2025-01-31", "status": "PIO CANEDO"}, {"nota": "NF 236", "valor": 70000.0, "data": "2025-02-06", "status": "DRUMOND"}, {"nota": "NF 241", "valor": 18055.8, "data": "2025-02-20", "status": "ALMOX"}, {"nota": "NF 242", "valor": 11865.24, "data": "2025-02-20", "status": "ALMOX"}, {"nota": "NF 319", "valor": 55970.86, "data": "2025-07-11", "status": "N. S. CARMO"}, {"nota": "NF 331", "valor": 100000.0, "data": "2025-07-28", "status": "DRUMOND"}, {"nota": "NF 332", "valor": 5200.0, "data": "2025-07-28", "status": "MURIAE"}, {"nota": "NF 335", "valor": 24000.0, "data": "2025-08-06", "status": "MURIAE"}, {"nota": "NF 336", "valor": 24000.0, "data": "2025-08-06", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 337", "valor": 24000.0, "data": "2025-08-06", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 338", "valor": 24000.0, "data": "2025-08-06", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 339", "valor": 24000.0, "data": "2025-08-06", "status": "PIO CANEDO"}, {"nota": "NF 340", "valor": 4000.0, "data": "2025-08-06", "status": "PJMA"}, {"nota": "NF 341", "valor": 37700.0, "data": "2025-08-07", "status": "DRUMOND"}, {"nota": "NF 342", "valor": 130500.0, "data": "2025-08-07", "status": "MURIAE"}, {"nota": "NF 343", "valor": 172550.0, "data": "2025-08-07", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 344", "valor": 174000.0, "data": "2025-08-07", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 345", "valor": 130500.0, "data": "2025-08-07", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 346", "valor": 130500.0, "data": "2025-08-07", "status": "PIO CANEDO"}, {"nota": "NF 352", "valor": 6190.56, "data": "2025-08-19", "status": "DAS BELO HORIZONTE"}, {"nota": "NF 369", "valor": 1450.0, "data": "2025-09-02", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 400", "valor": 25800.0, "data": "2025-09-12", "status": "DRUMOND"}, {"nota": "NF 401", "valor": 33600.0, "data": "2025-09-12", "status": "MURIAE"}, {"nota": "NF 402", "valor": 7800.0, "data": "2025-09-12", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 403", "valor": 7800.0, "data": "2025-09-12", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 404", "valor": 7800.0, "data": "2025-09-12", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 405", "valor": 7800.0, "data": "2025-09-12", "status": "PIO CANEDO"}, {"nota": "NF 416", "valor": 5400.0, "data": "2025-09-22", "status": "DRUMOND"}, {"nota": "NF 417", "valor": 11675.52, "data": "2025-09-22", "status": "DRUMOND"}, {"nota": "NF 418", "valor": 18000.0, "data": "2025-09-22", "status": "MURIAE"}, {"nota": "NF 419", "valor": 25296.96, "data": "2025-09-22", "status": "MURIAE"}, {"nota": "NF 420", "valor": 21600.0, "data": "2025-09-22", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 421", "valor": 27242.88, "data": "2025-09-22", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 423", "valor": 5200.0, "data": "2025-09-22", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 424", "valor": 18000.0, "data": "2025-09-22", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 425", "valor": 25296.96, "data": "2025-09-22", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 426", "valor": 5200.0, "data": "2025-09-22", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 427", "valor": 21600.0, "data": "2025-09-22", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 428", "valor": 31134.72, "data": "2025-09-22", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 429", "valor": 5200.0, "data": "2025-09-22", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 430", "valor": 39650.64, "data": "2025-09-22", "status": "BETIM"}, {"nota": "NF 433", "valor": 25296.96, "data": "2025-09-23", "status": "PIO CANEDO"}, {"nota": "NF434", "valor": 18000.0, "data": "2025-09-23", "status": "PIO CANEDO"}, {"nota": "NF435", "valor": 5200.0, "data": "2025-09-23", "status": "PIO CANEDO"}, {"nota": "NF 444", "valor": 30100.0, "data": "2025-09-26", "status": "MURIAE"}, {"nota": "NF 445", "valor": 55900.0, "data": "2025-09-26", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 446", "valor": 55900.0, "data": "2025-09-26", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 447", "valor": 73100.0, "data": "2025-09-26", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 448", "valor": 55900.0, "data": "2025-09-26", "status": "PIO CANEDO"}, {"nota": "NF 530", "valor": 37915.2, "data": "2025-11-04", "status": "DRUMOND"}, {"nota": "NF 531", "valor": 8745.11, "data": "2025-11-04", "status": "DRUMOND"}, {"nota": "NF 532", "valor": 8745.11, "data": "2025-11-04", "status": "DRUMOND"}, {"nota": "NF 533", "valor": 58979.2, "data": "2025-11-04", "status": "DRUMOND"}, {"nota": "NF 534", "valor": 3686.2, "data": "2025-11-04", "status": "PATOS DE MINAS"}, {"nota": "NF 535", "valor": 3686.2, "data": "2025-11-04", "status": "UNAÍ"}, {"nota": "NF 536", "valor": 180623.8, "data": "2025-11-04", "status": "UBÁ"}, {"nota": "NF 537", "valor": 22117.2, "data": "2025-11-04", "status": "ALMOX"}, {"nota": "NF 538", "valor": 26235.33, "data": "2025-11-04", "status": "MURIAE"}, {"nota": "NF 539", "valor": 26235.33, "data": "2025-11-04", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 540", "valor": 17490.22, "data": "2025-11-04", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 541", "valor": 37915.2, "data": "2025-11-04", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 542", "valor": 26235.33, "data": "2025-11-04", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 543", "valor": 26235.33, "data": "2025-11-04", "status": "PIO CANEDO"}, {"nota": "NF 565", "valor": 37915.2, "data": "2025-11-17", "status": "MURIAE"}, {"nota": "NF 566", "valor": 37915.2, "data": "2025-11-17", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 567", "valor": 37915.2, "data": "2025-11-17", "status": "PIMENTA DE VEIGA"}, {"nota": "NF 568", "valor": 37915.2, "data": "2025-11-17", "status": "TRÊS CORAÇÕES"}, {"nota": "NF 577", "valor": 37915.2, "data": "2025-11-27", "status": "PIO CANEDO"}, {"nota": "NF 578", "valor": 8745.11, "data": "2025-11-27", "status": "UBÁ"}, {"nota": "NF 579", "valor": 8745.11, "data": "2025-11-27", "status": "ALMOX"}, {"nota": "NF 580", "valor": 37915.2, "data": "2025-11-27", "status": "UNAÍ"}, {"nota": "NF 581", "valor": 37915.2, "data": "2025-11-27", "status": "PATOS DE MINAS"}, {"nota": "NF 582", "valor": 8745.11, "data": "2025-11-27", "status": "PIMENTA DE VEIGA"}, {"nota": "NFSE 286", "valor": 77168.0, "data": "2025-01-14", "status": "CSE UBERLANDIA"}, {"nota": "NFSE 287", "valor": 120204.0, "data": "2025-01-14", "status": "N. S. CARMO"}, {"nota": "NFSE 288", "valor": 179564.0, "data": "2025-01-14", "status": "BICAS II"}, {"nota": "NFSE 289", "valor": 81620.0, "data": "2025-01-14", "status": "BETIM"}, {"nota": "NFSE 290", "valor": 47488.0, "data": "2025-01-14", "status": "ALMOX"}, {"nota": "NFSE 291", "valor": 29680.0, "data": "2025-01-14", "status": "ALMOX"}, {"nota": "NFSE 292", "valor": 14840.0, "data": "2025-01-14", "status": "DAS BELO HORIZONTE"}, {"nota": "NFSE 293", "valor": 14840.0, "data": "2025-01-14", "status": "DAS MONTES CLAROS"}, {"nota": "NFSE 294", "valor": 19292.0, "data": "2025-01-14", "status": "DAS UBERLANDIA"}, {"nota": "NFSE 334", "valor": 78000.0, "data": "2025-06-05", "status": "CSE UBERLANDIA"}, {"nota": "NFSE 335", "valor": 22000.0, "data": "2025-06-05", "status": "DAS UBERLANDIA"}, {"nota": "NFSE 344", "valor": 42000.0, "data": "2025-07-09", "status": "ALMOX"}, {"nota": "NFSE 345", "valor": 30000.0, "data": "2025-07-09", "status": "ALMOX"}, {"nota": "NFSE 386", "valor": 110000.0, "data": "2025-07-11", "status": "N. S. CARMO"}, {"nota": "NFSE 434", "valor": 19000.0, "data": "2025-08-19", "status": "DAS BELO HORIZONTE"}, {"nota": "NFSE 435", "valor": 237760.0, "data": "2025-08-19", "status": "PIO CANEDO"}, {"nota": "NFSE 436", "valor": 160272.0, "data": "2025-08-19", "status": "DRUMOND"}, {"nota": "NFSE 437", "valor": 246664.0, "data": "2025-08-19", "status": "MURIAE"}, {"nota": "NFSE 438", "valor": 341640.0, "data": "2025-08-19", "status": "FRANCISCO DE SÁ"}, {"nota": "NFSE 439", "valor": 294152.0, "data": "2025-08-19", "status": "PIMENTA DE VEIGA"}, {"nota": "NFSE 440", "valor": 288216.0, "data": "2025-08-19", "status": "TRÊS CORAÇÕES"}, {"nota": "NFSE 478", "valor": 81000.0, "data": "2025-09-23", "status": "BETIM"}, {"nota": "NF 765", "valor": 70163.69, "data": "2026-03-23", "status": "PIO CANEDO"}, {"nota": "NF 766", "valor": 29933.82, "data": "2026-03-23", "status": "PIO CANEDO"}, {"nota": "NFSE 640", "valor": 222225.2, "data": "2026-03-23", "status": "PIO CANEDO"}, {"nota": "NF 783", "valor": 104591.4, "data": "2026-04-02", "status": "FRANCISCO DE SÁ"}, {"nota": "NFSE 644", "valor": 312800.4, "data": "2026-04-02", "status": "FRANCISCO DE SÁ"}, {"nota": "NF 791", "valor": 23519.43, "data": "2026-04-13", "status": "FRANCISCO DE SÁ"}], "materiais": []}, {"id": 10, "responsavel": "JACKSON", "nome": "BETIM", "contrato": 643510.0, "medido": 0.0, "saldo": 643510.0, "observacao": "liberação da os", "art": "OK", "sheet": "BETIM", "nfs": [], "materiais": []}, {"id": 11, "responsavel": "JACKSON", "nome": "RIBEIRÃO DAS NEVES", "contrato": 6742716.0, "medido": 0.0, "saldo": 6742716.0, "observacao": "liberação da os", "art": "NÃO", "sheet": "RIB. NEVES", "nfs": [], "materiais": []}, {"id": 12, "responsavel": "JACKSON", "nome": "OURO PRETO", "contrato": 4804386.9, "medido": 0.0, "saldo": 4804386.9, "observacao": "liberação da os", "art": "NÃO", "sheet": "OURO PRETO", "nfs": [], "materiais": []}, {"id": 13, "responsavel": "JACKSON", "nome": "RCG", "contrato": 140288.01, "medido": 12022.54, "saldo": 128265.47, "observacao": "", "art": "NÃO", "sheet": "RCG", "nfs": [], "materiais": []}, {"id": 14, "responsavel": "GUILHERME", "nome": "MPAC", "contrato": 3986759.0, "medido": 3666166.0, "saldo": 320593.0, "observacao": "entrega das cancelas e telas", "art": "NÃO", "sheet": "MPAC", "nfs": [{"nota": "NF 492", "valor": 383040.0, "data": "2025-10-24", "status": "PAGO"}, {"nota": "NF 489", "valor": 450000.0, "data": "2025-10-24", "status": "PAGO"}, {"nota": "NF 553", "valor": 34164.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 607", "valor": 14506.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 606", "valor": 9000.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 605", "valor": 18000.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 604", "valor": 259910.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 603", "valor": 1350.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 602", "valor": 228832.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 601", "valor": 194700.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 600", "valor": 381030.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 554", "valor": 21000.0, "data": "2025-12-09", "status": "PAGO"}, {"nota": "NF 618", "valor": 12000.0, "data": "2025-12-09", "status": "PAGO"}, {"nota": "NF 617", "valor": 266985.0, "data": "2025-12-09", "status": "PAGO"}, {"nota": "NF 616", "valor": 21226.0, "data": "2025-12-09", "status": "PAGO"}, {"nota": "NF 615", "valor": 2640.0, "data": "2025-12-09", "status": "PAGO"}, {"nota": "NF 614", "valor": 33440.0, "data": "2025-12-09", "status": "PAGO"}, {"nota": "NF 613", "valor": 135700.0, "data": "2025-12-09", "status": "PAGO"}, {"nota": "NF 612", "valor": 1100.0, "data": "2025-12-09", "status": "PAGO"}, {"nota": "NF 637", "valor": 41600.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 638", "valor": 28101.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 558", "valor": 13500.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 559", "valor": 60000.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NFS 577", "valor": 39000.0, "data": "2026-01-29", "status": "PAGO"}, {"nota": "NF 669", "valor": 42775.0, "data": "2026-01-29", "status": "PAGO"}, {"nota": "NF 668", "valor": 13650.0, "data": "2026-01-29", "status": "PAGO"}, {"nota": "NF 684", "valor": 245600.0, "data": "2026-02-06", "status": "PAGO"}, {"nota": "NF 685", "valor": 343139.0, "data": "2026-02-06", "status": "PAGO"}, {"nota": "NF 713", "valor": 2000.0, "data": "2026-02-20", "status": "PAGO"}, {"nota": "NF 712", "valor": 728.0, "data": "2026-02-20", "status": "PAGO"}, {"nota": "NF 711", "valor": 4050.0, "data": "2026-02-20", "status": "PAGO"}, {"nota": "NF 604", "valor": 254800.0, "data": "2026-03-24", "status": "PAGO"}, {"nota": "NF 785", "valor": 108600.0, "data": "2026-04-06", "status": "ATESTADA"}], "materiais": []}, {"id": 15, "responsavel": "GUILHERME", "nome": "SLU CFTV", "contrato": 1538416.0, "medido": 1538416.0, "saldo": 0.0, "observacao": "finalizar 10 certificações e desenhos", "art": "", "sheet": "SLU CFTV", "nfs": [{"nota": "NF 449", "valor": 1311136.0, "data": "2025-09-30", "status": "PAGO"}, {"nota": "NF 495", "valor": 2016.0, "data": "2025-09-30", "status": "PAGO"}, {"nota": "NF 630", "valor": 106000.0, "data": "2025-12-15", "status": "PAGO"}, {"nota": "NF 629", "valor": 70274.0, "data": "2025-12-15", "status": "PAGO"}, {"nota": "NF 567", "valor": 23400.0, "data": "2025-12-19", "status": "PAGO"}, {"nota": "NF 642", "valor": 2280.0, "data": "2025-12-19", "status": "PAGO"}, {"nota": "NF 566", "valor": 10260.0, "data": "2025-12-19", "status": "PAGO"}, {"nota": "NFS 590", "valor": 9800.0, "data": "2026-02-12", "status": "PAGO"}, {"nota": "NF 737", "valor": 650.0, "data": "2026-03-04", "status": "ATESTADA"}, {"nota": "NFS 642", "valor": 2600.0, "data": "2026-03-31", "status": "EMITIDA"}, {"nota": "NF 636", "valor": 13000.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 597", "valor": 158800.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 598", "valor": 3000.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 565", "valor": 8968.0, "data": "2025-12-19", "status": "PAGO"}, {"nota": "NF 641", "valor": 28180.0, "data": "2025-12-19", "status": "PAGO"}, {"nota": "NF 820", "valor": 30000.0, "data": "2026-04-29", "status": "EMITIDA"}], "materiais": []}, {"id": 16, "responsavel": "GUILHERME", "nome": "SLU CAB URE", "contrato": 224225.5, "medido": 218845.5, "saldo": 5380.0, "observacao": "finalizado", "art": "", "sheet": "SLU CABEAMENTO URE", "nfs": [{"nota": "NF 506", "valor": 30070.0, "data": "2025-09-30", "status": "PAGO"}, {"nota": "NF 468", "valor": 9300.0, "data": "2025-10-24", "status": "PAGO"}, {"nota": "NF 467", "valor": 100578.5, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 547", "valor": 9500.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 621", "valor": 69397.0, "data": "2025-12-05", "status": "PAGO"}, {"nota": "NF 620", "valor": 55993.0, "data": "2025-12-11", "status": "PAGO"}], "materiais": []}, {"id": 17, "responsavel": "GUILHERME", "nome": "SLU CAB 3 LOCAIS", "contrato": 975080.5, "medido": 908180.5, "saldo": 66900.0, "observacao": "falta poste para passar fibra", "art": "", "sheet": "SLU CABEAMENTO 3 LOCAIS", "nfs": [{"nota": "NF 635", "valor": 557696.5, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 634", "valor": 36860.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 633", "valor": 31350.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 573", "valor": 78890.0, "data": "2025-12-31", "status": "PAGO"}, {"nota": "NF 651", "valor": 93680.0, "data": "2026-01-20", "status": "PAGO"}, {"nota": "NF 594", "valor": 107004.0, "data": "2026-02-20", "status": "PAGO"}, {"nota": "NF 709", "valor": 2700.0, "data": "2026-02-20", "status": "PAGO"}, {"nota": "NF 787", "valor": 15960.0, "data": "2025-12-17", "status": "EMITIDA"}, {"nota": "NF 821", "valor": 20730.0, "data": "2026-04-30", "status": "EMITIDA"}, {"nota": "NFS 673", "valor": 32460.0, "data": "2026-04-30", "status": "EMITIDA"}], "materiais": []}, {"id": 18, "responsavel": "GUILHERME", "nome": "SLU 6 PEV", "contrato": 325361.0, "medido": 325361.0, "saldo": 0.0, "observacao": "falta switch e trocar os HD", "art": "", "sheet": "SLU 6 PEVS", "nfs": [{"nota": "NF 700", "valor": 2700.0, "data": "2026-02-12", "status": "PAGO"}, {"nota": "NF 736", "valor": 39000.0, "data": "2026-03-04", "status": "PAGO"}, {"nota": "NF 792", "valor": 19500.0, "data": "2026-04-17", "status": "EMITIDA"}, {"nota": "NF 571", "valor": 4092.0, "data": "2025-12-30", "status": "PAGO"}, {"nota": "NF 645", "valor": 26100.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 644", "valor": 41700.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 652", "valor": 39000.0, "data": "2026-01-29", "status": "PAGO"}, {"nota": "NF 646", "valor": 19750.0, "data": "2025-12-31", "status": "PAGO"}, {"nota": "NF 671", "valor": 78000.0, "data": "2026-01-29", "status": "PAGO"}, {"nota": "NF 670", "valor": 35359.0, "data": "2026-01-29", "status": "PAGO"}, {"nota": "NF 595", "valor": 9360.0, "data": "2026-02-20", "status": "EMITIDA"}, {"nota": "NF 751", "valor": 24000.0, "data": "2026-03-09", "status": "EMITIDA"}, {"nota": "NF 771", "valor": 24000.0, "data": "2026-03-24", "status": "EMITIDA"}, {"nota": "NF 779", "valor": 24000.0, "data": "2026-03-31", "status": "EMITIDA"}], "materiais": []}, {"id": 19, "responsavel": "GUILHERME", "nome": "UNB", "contrato": 2486723.82, "medido": 1870169.2, "saldo": 616554.62, "observacao": "Falta compra de fechadura licença e troca de um modelo de câmera", "art": "", "sheet": "UNB", "nfs": [{"nota": "NF 213", "valor": 1653.0, "data": "2024-12-19", "status": "PAGO"}, {"nota": "NF 212", "valor": 4959.0, "data": "2024-12-19", "status": "PAGO"}, {"nota": "NF 211", "valor": 11571.0, "data": "2024-12-19", "status": "PAGO"}, {"nota": "NF 210", "valor": 4590.0, "data": "2024-12-19", "status": "PAGO"}, {"nota": "NF 249", "valor": 1333.86, "data": "2025-02-21", "status": "PAGO"}, {"nota": "NF 248", "valor": 19094.3, "data": "2025-02-21", "status": "PAGO"}, {"nota": "NF 247", "valor": 1333.86, "data": "2025-02-21", "status": "PAGO"}, {"nota": "NF 246", "valor": 10670.88, "data": "2025-02-21", "status": "PAGO"}, {"nota": "NF 245", "valor": 1333.86, "data": "2025-02-21", "status": "PAGO"}, {"nota": "NF 282", "valor": 4503.72, "data": "2025-04-07", "status": "PAGO"}, {"nota": "NF 281", "valor": 1333.86, "data": "2025-04-07", "status": "PAGO"}, {"nota": "NF 280", "valor": 918.0, "data": "2025-04-07", "status": "PAGO"}, {"nota": "NF 322", "valor": 3256.0, "data": "2025-05-20", "status": "PAGO"}, {"nota": "NF 321", "valor": 212.46, "data": "2025-05-20", "status": "PAGO"}, {"nota": "NF 320", "valor": 23581.0, "data": "2025-05-20", "status": "PAGO"}, {"nota": "NF 319", "valor": 1487.22, "data": "2025-05-20", "status": "PAGO"}, {"nota": "NF 300", "valor": 36800.0, "data": "2025-06-10", "status": "PAGO"}, {"nota": "NF 303", "valor": 6400.0, "data": "2025-06-11", "status": "PAGO"}, {"nota": "NF 302", "valor": 48000.0, "data": "2025-06-11", "status": "PAGO"}, {"nota": "NF 301", "valor": 12800.0, "data": "2025-06-11", "status": "PAGO"}, {"nota": "NF 337", "valor": 1628.0, "data": "2025-06-13", "status": "EMITIDA"}, {"nota": "NF 322", "valor": 6675.0, "data": "2025-07-15", "status": "PAGO"}, {"nota": "NF 329", "valor": 350000.0, "data": "2025-07-23", "status": "PAGO"}, {"nota": "NF 334", "valor": 6612.0, "data": "2025-07-30", "status": "PAGO"}, {"nota": "NF 333", "valor": 12800.0, "data": "2025-07-30", "status": "PAGO"}, {"nota": "NF 353", "valor": 22400.0, "data": "2025-08-19", "status": "PAGO"}, {"nota": "NF 442", "valor": 352000.0, "data": "2025-08-27", "status": "PAGO"}, {"nota": "NF 507", "valor": 8760.0, "data": "2025-10-29", "status": "PAGO"}, {"nota": "NF 506", "valor": 10000.0, "data": "2025-10-29", "status": "PAGO"}, {"nota": "NF 548", "valor": 918.0, "data": "2025-11-11", "status": "PAGO"}, {"nota": "NF 549", "valor": 1836.0, "data": "2025-11-11", "status": "PAGO"}, {"nota": "NF 550", "valor": 2667.72, "data": "2025-11-12", "status": "PAGO"}, {"nota": "NF 551", "valor": 918.0, "data": "2025-11-12", "status": "PAGO"}, {"nota": "NF 553", "valor": 2667.72, "data": "2025-11-12", "status": "PAGO"}, {"nota": "NF 554", "valor": 10098.0, "data": "2025-11-12", "status": "PAGO"}, {"nota": "NF 555", "valor": 6755.58, "data": "2025-11-12", "status": "PAGO"}, {"nota": "NF 556", "valor": 2667.72, "data": "2025-11-12", "status": "PAGO"}, {"nota": "NF 557", "valor": 589.0, "data": "2025-11-12", "status": "PAGO"}, {"nota": "NF 552", "valor": 9007.44, "data": "2025-11-12", "status": "PAGO"}, {"nota": "NF 572", "valor": 3200.0, "data": "2025-11-25", "status": "PAGO"}, {"nota": "NF 564", "valor": 291200.0, "data": "2025-11-25", "status": "PAGO"}, {"nota": "NF 562", "valor": 8000.0, "data": "2025-11-25", "status": "PAGO"}, {"nota": "NF 561", "valor": 24000.0, "data": "2025-11-25", "status": "PAGO"}, {"nota": "NF 560", "valor": 28800.0, "data": "2025-11-25", "status": "PAGO"}, {"nota": "NF 657", "valor": 1653.0, "data": "2026-01-27", "status": "PAGO"}, {"nota": "NF 656", "valor": 16000.0, "data": "2026-01-27", "status": "PAGO"}, {"nota": "NF 655", "valor": 1600.0, "data": "2026-01-27", "status": "PAGO"}, {"nota": "NF 654", "valor": 6400.0, "data": "2026-01-27", "status": "PAGO"}, {"nota": "NF 592", "valor": 3256.0, "data": "2026-02-12", "status": "EMITIDA"}, {"nota": "NF 591", "valor": 1628.0, "data": "2026-02-12", "status": "EMITIDA"}, {"nota": "NF 703", "valor": 152000.0, "data": "2026-02-12", "status": "PAGO"}, {"nota": "NF 702", "valor": 327600.0, "data": "2026-02-12", "status": "PAGO"}], "materiais": []}, {"id": 20, "responsavel": "GUILHERME", "nome": "IBAMA", "contrato": 1233051.0, "medido": 0.0, "saldo": 1233051.0, "observacao": "material geral", "art": "OK", "sheet": "IBAMA", "nfs": [], "materiais": []}, {"id": 21, "responsavel": "GUILHERME", "nome": "TSE", "contrato": 4212633.68, "medido": 4212633.68, "saldo": 0.0, "observacao": "Finalizar a configuração", "art": "OK", "sheet": "TSE", "nfs": [{"nota": "NF 512", "valor": 784740.08, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 569", "valor": 263700.0, "data": "2025-12-17", "status": "PAGO"}, {"nota": "NF 574", "valor": 180000.0, "data": "2025-11-25", "status": "PAGO"}, {"nota": "NF 575", "valor": 468000.0, "data": "2025-11-26", "status": "PAGO"}, {"nota": "NF 627", "valor": 149329.6, "data": "2025-12-12", "status": "PAGO"}, {"nota": "NF 626", "valor": 237800.0, "data": "2025-12-12", "status": "PAGO"}, {"nota": "NF 556", "valor": 1709064.0, "data": "2025-12-15", "status": "PAGO"}, {"nota": "NF 557", "valor": 300000.0, "data": "2025-12-15", "status": "PAGO"}, {"nota": "NF 558", "valor": 120000.0, "data": "2025-12-16", "status": "EMITIDA"}], "materiais": []}, {"id": 22, "responsavel": "GUILHERME", "nome": "CPB", "contrato": 10776972.4, "medido": 836059.4, "saldo": 9940913.0, "observacao": "Controle geral", "art": "ok", "sheet": "CPB", "nfs": [{"nota": "NF 615", "valor": 323230.0, "data": "2026-03-05", "status": "PAGO"}, {"nota": "NF 643", "valor": 512829.4, "data": "2026-04-01", "status": "EMITIDA"}], "materiais": []}, {"id": 23, "responsavel": "GUILHERME", "nome": "DER", "contrato": 6456125.2, "medido": 0.0, "saldo": 6456125.2, "observacao": "Conferir planilha para emissão de empenho", "art": "NÃO", "sheet": "DER", "nfs": [], "materiais": []}];
+let D = DADOS_ORIGINAIS;
+let CARREGOU_APPS_SCRIPT = false;
+let obraAtual=0;
+const R=v=>'R$ '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const Rk=v=>{v=Number(v||0);return v>=1e6?'R$ '+(v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})+'M':v>=1e3?'R$ '+(v/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0})+'k':R(v)};
+const pct=(a,b)=>b>0?(a/b*100).toFixed(1)+'%':'0%';
+const sClass=s=>{s=(s||'').toUpperCase(); if(s.includes('PAGO'))return 's3'; if(s.includes('ATEST'))return 's2'; if(s.includes('EMIT'))return 's1'; if(s.includes('CANCEL'))return 's4'; return 's0'};
+const arred2=v=>Math.round((Number(v||0)+Number.EPSILON)*100)/100;
+const moedaInput=v=>R(arred2(v));
+const numeroBR=v=>{const s=String(v||"0").trim().replace(/[R$\s]/g,"");const d=s.replace(/\.(?=[0-9]{3}(,|$))/g,"").replace(",",".");return arred2(parseFloat(d)||0);};const parseMoeda=v=>numeroBR(v);
+
+function aditivosObra(o){
+  if(!Array.isArray(o.aditivos)){
+    const valorAntigo=Number(o.aditivo||0);
+    o.aditivos=valorAntigo>0?[{id:'aditivo_1',numero:'Aditivo 01',descricao:'',data:'',valor:arred2(valorAntigo)}]:[];
+  }
+  o.aditivos.forEach((a,i)=>{if(!a.id)a.id='aditivo_'+Date.now()+'_'+i; if(!a.numero)a.numero='Aditivo '+String(i+1).padStart(2,'0'); a.valor=arred2(a.valor||0);});
+  return o.aditivos;
+}
+function totalAditivosObra(o){return arred2(aditivosObra(o).reduce((s,a)=>s+Number(a.valor||0),0));}
+function aditivoObra(o){return totalAditivosObra(o);}
+function contratoTotalObra(o){return arred2(Number(o.contrato||0)+totalAditivosObra(o));}
+function saldoCalculadoObra(o){return Math.max(arred2(contratoTotalObra(o)-resumoFinanceiro(o).emitido),0);}
+function origemNF(n){return n.origem||'Contrato';}
+function labelOrigemNF(o, origem){
+  if(!origem || origem==='Contrato')return 'Contrato';
+  if(origem==='Aditivo')return 'Aditivos';
+  const ad=aditivosObra(o).find(a=>a.id===origem);
+  return ad ? (ad.numero||'Aditivo') : 'Aditivo removido';
+}
+function opcoesOrigemNF(o){return [{id:'Contrato',label:'Contrato'}].concat(aditivosObra(o).map(a=>({id:a.id,label:a.numero||'Aditivo'})));}
+function resumoFinanceiro(o, origem){
+  const nfs=o.nfs||[];
+  const filtra=n=>{
+    const org=origemNF(n);
+    if(!origem)return true;
+    if(origem==='Contrato')return org==='Contrato' || !org;
+    if(origem==='Aditivo')return org!=='Contrato';
+    return org===origem;
+  };
+  const base=nfs.filter(filtra);
+  const pago=base.reduce((s,n)=>s+((String(n.status||'').toUpperCase().includes('PAGO'))?Number(n.valor||0):0),0);
+  const emitido=base.reduce((s,n)=>s+((String(n.status||'').toUpperCase().includes('EMIT')||String(n.status||'').toUpperCase().includes('ATEST')||String(n.status||'').toUpperCase().includes('PAGO'))?Number(n.valor||0):0),0);
+  const atestado=base.reduce((s,n)=>s+((String(n.status||'').toUpperCase().includes('ATEST')||String(n.status||'').toUpperCase().includes('PAGO'))?Number(n.valor||0):0),0);
+  return {pago:arred2(pago),emitido:arred2(emitido),atestado:arred2(atestado)};
+}
+function garantirCamposObra(o){
+  if(!o.materiais)o.materiais=[]; if(!o.nfs)o.nfs=[]; if(!o.empreiteiros)o.empreiteiros=[];
+  aditivosObra(o);
+  (o.nfs||[]).forEach(n=>{if(!n.origem)n.origem='Contrato'; if(n.origem==='Aditivo' && aditivosObra(o).length)n.origem=aditivosObra(o)[0].id; n.valor=arred2(n.valor||0);});
+  (o.materiais||[]).forEach(i=>{i.custo=arred2(i.custo||0); i.venda=arred2(i.venda||0);});
+  o.saldo=saldoCalculadoObra(o);
+}
+
+function sincronizarAditivosDaTela(){
+  const corpo=document.getElementById('corpo-aditivos');
+  if(!corpo || !D || !D.length || !D[obraAtual])return;
+  const o=obra(); garantirCamposObra(o);
+  const rows=corpo.querySelectorAll('tr[data-aditivo-index]');
+  rows.forEach(row=>{
+    const i=Number(row.getAttribute('data-aditivo-index'));
+    if(!Number.isInteger(i) || !o.aditivos[i])return;
+    const numero=row.querySelector('[data-campo="numero"]');
+    const descricao=row.querySelector('[data-campo="descricao"]');
+    const data=row.querySelector('[data-campo="data"]');
+    const valor=row.querySelector('[data-campo="valor"]');
+    if(numero)o.aditivos[i].numero=numero.value;
+    if(descricao)o.aditivos[i].descricao=descricao.value;
+    if(data)o.aditivos[i].data=data.value;
+    if(valor)o.aditivos[i].valor=arred2(parseMoeda(valor.value));
+  });
+}
+function prepararDadosParaSalvar(){
+  if(!Array.isArray(D))D=[];
+  D.forEach(o=>{
+    garantirCamposObra(o);
+    o.contrato=arred2(o.contrato||0);
+    o.medido=arred2(o.medido||0);
+    o.saldo=saldoCalculadoObra(o);
+    o.aditivos=aditivosObra(o).map((a,i)=>({
+      id:a.id||('aditivo_'+Date.now()+'_'+i),
+      numero:a.numero||('Aditivo '+String(i+1).padStart(2,'0')),
+      descricao:a.descricao||'',
+      data:a.data||'',
+      valor:arred2(a.valor||0)
+    }));
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  CONFIGURAÇÃO — Cole aqui a URL da sua Web App (Apps Script)
+//  Exemplo: 'https://script.google.com/macros/s/SEU_ID/exec'
+// ─────────────────────────────────────────────────────────────────
+const SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbw1npV4zCwJzBlZuK94WEKlqec-Kt8I3KZZfoBREUaidMEqUcO5b5MaJs2cEDnlI0v-kg/exec';
+
+let SALVANDO_SHEETS=false;
+let SALVAR_PENDENTE=false;
+let SALVAR_TIMER=null;
+let ADITIVO_SAVE_TIMER=null;
+let ULTIMO_JSON_ENVIADO='';
+
+function temWebApp(){ return SHEETS_WEBAPP_URL && !SHEETS_WEBAPP_URL.startsWith('COLE'); }
+
+function avisoSalvar(txt, erro=false){
+  const el=document.getElementById('topo-salvo');
+  if(!el)return;
+  el.textContent=txt;
+  el.style.color=erro?'#fca5a5':'#4ade80';
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>{el.classList.remove('show');el.textContent='✓ Salvo automaticamente';el.style.color='#4ade80';}, erro?5200:1800);
+}
+
+function salvar(){
+  sincronizarAditivosDaTela();
+  prepararDadosParaSalvar();
+  const json=JSON.stringify(D);
+  try{ localStorage.setItem(CHAVE,json); }catch(e){}
+
+  if (!temWebApp()) {
+    avisoSalvar('✓ Salvo localmente');
+    return;
+  }
+
+  // Debounce: espera o usuário terminar a edição antes de enviar ao Sheets.
+  clearTimeout(SALVAR_TIMER);
+  SALVAR_TIMER=setTimeout(()=>salvarNoSheets(json),800);
+  avisoSalvar('Salvando no Sheets...');
+}
+
+function salvarNoSheets(json){
+  if(SALVANDO_SHEETS){
+    SALVAR_PENDENTE=json;
+    return;
+  }
+  if(json===ULTIMO_JSON_ENVIADO){
+    avisoSalvar('✓ Salvo automaticamente');
+    return;
+  }
+  SALVANDO_SHEETS=true;
+
+  fetch(SHEETS_WEBAPP_URL, {
+    method: 'POST',
+    body: JSON.stringify({ data: json }),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(r => r.json())
+  .then(function(resp){
+    SALVANDO_SHEETS=false;
+    if(resp && resp.ok){
+      ULTIMO_JSON_ENVIADO=json;
+      avisoSalvar('✓ Salvo no Sheets');
+    } else {
+      avisoSalvar('⚠ Erro ao salvar: '+(resp&&resp.erro?resp.erro:'resposta inválida'), true);
+    }
+    if(SALVAR_PENDENTE){
+      const pendente=SALVAR_PENDENTE;
+      SALVAR_PENDENTE=false;
+      salvarNoSheets(pendente);
+    }
+  })
+  .catch(function(err){
+    SALVANDO_SHEETS=false;
+    avisoSalvar('⚠ Erro ao salvar no Sheets: '+err.message, true);
+    if(SALVAR_PENDENTE){
+      const pendente=SALVAR_PENDENTE;
+      SALVAR_PENDENTE=false;
+      setTimeout(()=>salvarNoSheets(pendente),1200);
+    }
+  });
+}
+const RENDER_MAP={'geral':renderGeral,'obra':renderObra,'materiais':renderMateriais,'empreiteiros':renderEmpreiteiros,'nfs':renderNFs,'config':()=>{renderAditivos();carregarConfig();}};
+function ir(id,el){document.querySelectorAll('.secao').forEach(s=>s.classList.remove('ativa'));document.querySelectorAll('.aba').forEach(a=>a.classList.remove('ativa'));document.getElementById('sec-'+id).classList.add('ativa');el.classList.add('ativa');const fn=RENDER_MAP[id];if(fn)fn();}
+function obra(){return D[obraAtual]}
+function init(){
+  if(!D.length)D.push(criarObraBase('Nova obra')); D.forEach(garantirCamposObra);
+  if(obraAtual>=D.length)obraAtual=D.length-1;
+  const sel=document.getElementById('obra-select');
+  sel.innerHTML=D.map((o,i)=>`<option value="${i}">${o.nome||('Obra '+(i+1))}</option>`).join('');
+  sel.value=obraAtual;
+  renderTudo();
+}
+function selecionarObra(i){obraAtual=i;document.getElementById('obra-select').value=i;renderTudo();document.getElementById('titulo-proj').textContent='Dashboard — '+obra().nome;}
+function renderTudo(){renderGeral();renderObra();renderMateriais();renderEmpreiteiros();renderNFs();renderAditivos();carregarConfig();}
+function renderGeral(){
+  const q=(document.getElementById('busca').value||'').toLowerCase();
+  const f=document.getElementById('filtro-status').value;
+  let lista=D.filter(o=>(o.nome+' '+o.responsavel).toLowerCase().includes(q));
+  if(f==='comsaldo') lista=lista.filter(o=>saldoCalculadoObra(o)>0);
+  if(f==='quitada') lista=lista.filter(o=>saldoCalculadoObra(o)<=0);
+  const total=lista.reduce((s,o)=>s+contratoTotalObra(o),0);
+  const pago=lista.reduce((s,o)=>s+resumoFinanceiro(o).pago,0);
+  const atestado=lista.reduce((s,o)=>s+resumoFinanceiro(o).atestado,0);
+  const emitido=lista.reduce((s,o)=>s+resumoFinanceiro(o).emitido,0);
+  document.getElementById('kpis-geral').innerHTML=[
+    {l:'Obras',v:lista.length,n:'filtradas'},
+    {l:'Contrato Total',v:Rk(total),n:'carteira',cls:'kpi-azul'},
+    {l:'Valor Pago',v:Rk(pago),n:pct(pago,total)+' do contrato',cls:'kpi-verde'},
+    {l:'Valor Atestado',v:Rk(atestado),n:pct(atestado,total)+' do contrato',cls:'kpi-laranja'},
+    {l:'Valor Emitido',v:Rk(emitido),n:pct(emitido,total)+' do contrato',cls:'kpi-azul'}
+  ].map(k=>`<div class="kpi ${k.cls||''}"><div class="kpi-label">${k.l}</div><div class="kpi-valor">${k.v}</div><div class="kpi-nota">${k.n}</div></div>`).join('');
+  document.getElementById('cards-obras').innerHTML=lista.map(o=>{
+    const rf=resumoFinanceiro(o);
+    return `<div class="obra-card" onclick="selecionarObra(${D.indexOf(o)});document.querySelectorAll('.aba')[1].click()"><h3>${o.nome}</h3><div class="mini"><b>Responsável:</b> ${o.responsavel||'—'}<br><b>Contrato original:</b> ${R(o.contrato)}<br><b>Aditivos:</b> ${R(totalAditivosObra(o))}<br><b>Contrato total:</b> ${R(contratoTotalObra(o))}<br><b>Valor pago:</b> ${R(rf.pago)}<br><b>Valor atestado:</b> ${R(rf.atestado)}<br><b>Valor emitido:</b> ${R(rf.emitido)}<br><b>Saldo calculado:</b> ${R(saldoCalculadoObra(o))}<br><b>NFs:</b> ${(o.nfs||[]).length} · <b>Levantamento:</b> ${(o.materiais||[]).length} · <b>Empreiteiros:</b> ${(o.empreiteiros||[]).length}</div></div>`;
+  }).join('');
+}
+let graficoFinObra;
+let graficoAditivoObra;
+function fatiasFinanceiras(base, f){
+  const pago=Math.max(f.pago,0);
+  const atestadoPendente=Math.max(arred2(f.atestado-f.pago),0);
+  const emitidoPendente=Math.max(arred2(f.emitido-f.atestado),0);
+  const saldo=Math.max(arred2(Number(base||0)-f.emitido),0);
+  return {labels:['Pago por NFs','Atestado pendente de pagamento','Emitido pendente de ateste','Saldo'], valores:[pago,atestadoPendente,emitidoPendente,saldo]};
+}
+function criarPizzaFinanceira(ctx, chartAtual, titulo, base, f){
+  if(!ctx || typeof Chart==='undefined')return chartAtual;
+  const fat=fatiasFinanceiras(base,f);
+  const totalBase=Number(base||0)||fat.valores.reduce((a,b)=>a+b,0)||1;
+  if(chartAtual)chartAtual.destroy();
+  return new Chart(ctx,{
+    type:'doughnut',
+    data:{labels:fat.labels,datasets:[{data:fat.valores,backgroundColor:['#16a34a','#f59e0b','#2563eb','#cbd5e1'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{title:function(){return titulo;},label:function(c){const v=c.parsed||0;return c.label+': '+R(v)+' ('+pct(v,totalBase)+')';}}}}}
+  });
+}
+function renderGraficoFinObra(o){
+  graficoFinObra=criarPizzaFinanceira(document.getElementById('grafico-fin-obra'),graficoFinObra,'Contrato original',Number(o.contrato||0),resumoFinanceiro(o,'Contrato'));
+  graficoAditivoObra=criarPizzaFinanceira(document.getElementById('grafico-aditivo-obra'),graficoAditivoObra,'Aditivo',aditivoObra(o),resumoFinanceiro(o,'Aditivo'));
+}
+
+function renderObra(){
+  const o=obra(); garantirCamposObra(o);
+  const nfs=o.nfs||[];
+  const mat=o.materiais||[];
+  const f=resumoFinanceiro(o);
+  const fContrato=resumoFinanceiro(o,'Contrato');
+  const fAditivo=resumoFinanceiro(o,'Aditivo');
+  const qtdAditivos=aditivosObra(o).length;
+  const totalCustoMat=mat.reduce((s,i)=>s+Number(i.qtd||0)*Number(i.custo||0),0);
+  const totalVendaMat=mat.reduce((s,i)=>s+Number(i.qtd||0)*Number(i.venda||0),0);
+  const saldoCalc=saldoCalculadoObra(o);
+  document.getElementById('kpis-obra').innerHTML=[
+    {l:'Contrato Total',v:Rk(contratoTotalObra(o)),n:'Original '+R(o.contrato)+' + aditivos '+R(totalAditivosObra(o)),cls:'kpi-azul'},
+    {l:'Aditivos',v:Rk(totalAditivosObra(o)),n:qtdAditivos+' aditivo(s) · NFs: '+R(fAditivo.emitido),cls:'kpi-verde'},
+    {l:'Valor Pago',v:Rk(f.pago),n:pct(f.pago,contratoTotalObra(o))+' do contrato total',cls:'kpi-verde'},
+    {l:'Valor Atestado',v:Rk(f.atestado),n:pct(f.atestado,contratoTotalObra(o))+' do contrato total',cls:'kpi-laranja'},
+    {l:'Valor Emitido',v:Rk(f.emitido),n:nfs.length+' NF(s) / medição(ões)',cls:'kpi-azul'},
+    {l:'Saldo Calculado',v:Rk(saldoCalc),n:'Contrato + aditivo - valor emitido',cls:'kpi-laranja'},
+    {l:'Total Custo',v:Rk(totalCustoMat),n:'levantamento',cls:'kpi-laranja'},
+    {l:'Total Venda',v:Rk(totalVendaMat),n:mat.length+' itens editáveis',cls:'kpi-verde'}
+  ].map(k=>`<div class="kpi ${k.cls||''}"><div class="kpi-label">${k.l}</div><div class="kpi-valor">${k.v}</div><div class="kpi-nota">${k.n}</div></div>`).join('');
+  const max=Math.max(contratoTotalObra(o),o.contrato,totalAditivosObra(o),saldoCalc,f.emitido,f.atestado,f.pago,1);
+  document.getElementById('barras-obra').innerHTML=[
+    ['Contrato original',o.contrato,'#1a2035'],
+    ['Aditivos',totalAditivosObra(o),'#7c3aed'],
+    ['Contrato total',contratoTotalObra(o),'#2563eb'],
+    ['Pago por NFs',f.pago,'#16a34a'],
+    ['Atestado',f.atestado,'#f59e0b'],
+    ['Emitido',f.emitido,'#2563eb'],
+    ['Saldo calculado',saldoCalc,'#ea580c'],
+    ['NFs contrato',fContrato.emitido,'#64748b'],
+    ['NFs aditivo',fAditivo.emitido,'#7c3aed']
+  ].map(b=>`<div class="barra-row"><div class="barra-meta"><span class="barra-label">${b[0]}</span><span class="barra-val">${R(b[1])}</span></div><div class="barra-track"><div class="barra-fill" style="width:${(Number(b[1]||0)/max*100).toFixed(1)}%;background:${b[2]}"></div></div></div>`).join('');
+  renderGraficoFinObra(o);
+  let als=[];
+  if(f.emitido>f.atestado)als.push(['al-azul','Valor emitido pendente de atestado',`Existem ${R(f.emitido-f.atestado)} emitidos ainda sem atestado.`]);
+  if(saldoCalc>0)als.push(['al-laranja','Saldo calculado pendente',`Faltam ${R(saldoCalc)} para completar contrato + aditivo.`]); else als.push(['al-verde','Contrato totalmente emitido',`Valor emitido alcançou contrato + aditivo.`]);
+  if(totalAditivosObra(o)>0 && fAditivo.emitido===0)als.push(['al-cinza','Aditivos sem NF vinculada',`Existem aditivos de ${R(totalAditivosObra(o))}, mas nenhuma NF foi vinculada a aditivo.`]);
+  if(o.observacao)als.push(['al-azul','Observação',o.observacao]);
+  if(o.art)als.push(['al-cinza','ART',o.art]);
+  document.getElementById('alertas-obra').innerHTML=als.map(a=>`<div class="alerta ${a[0]}"><div>ℹ️</div><div><strong>${a[1]}</strong>${a[2]}</div></div>`).join('');
+}
+function renderMateriais(){
+  const mat=obra().materiais||(obra().materiais=[]);
+  const totalCusto=mat.reduce((s,i)=>s+Number(i.qtd||0)*Number(i.custo||0),0);
+  const totalVenda=mat.reduce((s,i)=>s+Number(i.qtd||0)*Number(i.venda||0),0);
+  document.getElementById('corpo-mat').innerHTML=mat.map((it,i)=>{
+    const qtd=Number(it.qtd||0), custo=arred2(it.custo||0), venda=arred2(it.venda||0);
+    return `<tr><td><span class="cel-readonly">${i+1}</span></td><td><input class="cel" value="${it.desc||''}" onchange="editMat(${i},'desc',this.value)" placeholder="Descrição"></td><td><input class="cel" value="${it.marca||''}" onchange="editMat(${i},'marca',this.value)" placeholder="Marca"></td><td><select class="cel" onchange="editMat(${i},'cat',this.value)">${['Equipamento','Software','Infraestrutura','Serviço','Outro'].map(c=>`<option ${(it.cat||'Equipamento')===c?'selected':''}>${c}</option>`).join('')}</select></td><td><input class="cel cel-num" type="number" step="0.01" value="${qtd}" onchange="editMat(${i},'qtd',+this.value)"></td><td><input class="cel cel-num" type="text" inputmode="decimal" value="${moedaInput(custo)}" onfocus="this.value=String(parseMoeda(this.value)).replace('.',',')" onchange="editMat(${i},'custo',parseMoeda(this.value))" onblur="this.value=moedaInput(parseMoeda(this.value))"></td><td><input class="cel cel-num" type="text" inputmode="decimal" value="${moedaInput(venda)}" onfocus="this.value=String(parseMoeda(this.value)).replace('.',',')" onchange="editMat(${i},'venda',parseMoeda(this.value))" onblur="this.value=moedaInput(parseMoeda(this.value))"></td><td><span class="cel-readonly">${R(qtd*custo)}</span></td><td><span class="cel-readonly">${R(qtd*venda)}</span></td><td><select class="sel-status ${sClass(it.status)}" onchange="editMat(${i},'status',this.value)">${['Pendente','Comprado','Entregue','Instalado','Cancelado'].map(s=>`<option ${(it.status||'Pendente')===s?'selected':''}>${s}</option>`).join('')}</select></td><td><button class="btn-del-linha" onclick="delMat(${i})">✕</button></td></tr>`;
+  }).join('') + `<tr class="empr-total-row"><td colspan="7">Totais do levantamento</td><td style="text-align:right">${R(totalCusto)}</td><td style="text-align:right">${R(totalVenda)}</td><td colspan="2"></td></tr>`;
+}
+function editMat(i,c,v){
+  if(c==='custo'||c==='venda')v=arred2(v);
+  obra().materiais[i][c]=v;
+  salvar();
+  renderMateriais();
+  renderObra();
+}
+
+function novoMaterial(){obra().materiais.push({desc:'Novo item',marca:'',cat:'Equipamento',qtd:1,custo:0,venda:0,status:'Pendente'});salvar();renderMateriais();}
+function delMat(i){if(confirm('Excluir este item do levantamento?')){obra().materiais.splice(i,1);salvar();renderMateriais();renderObra();renderGeral();}}
+
+function resumoEmpreiteiros(o){
+  const lista=o.empreiteiros||[];
+  const contratado=lista.reduce((s,e)=>s+Number(e.contrato||0),0);
+  const pago=lista.reduce((s,e)=>s+Number(e.pago||0),0);
+  const falta=Math.max(contratado-pago,0);
+  return {contratado,pago,falta,qtd:lista.length};
+}
+function renderEmpreiteiros(){
+  const o=obra(); garantirCamposObra(o);
+  const lista=o.empreiteiros||(o.empreiteiros=[]);
+  const r=resumoEmpreiteiros(o);
+  const label=document.getElementById('empr-obra-label');
+  if(label)label.textContent='Obra: '+(o.nome||'obra selecionada');
+  const kpis=document.getElementById('kpis-empreiteiros');
+  if(kpis)kpis.innerHTML=[
+    {l:'Empreiteiros',v:r.qtd,n:'vinculados à obra'},
+    {l:'Contratos',v:Rk(r.contratado),n:'valor contratado',cls:'kpi-azul'},
+    {l:'Pagamentos',v:Rk(r.pago),n:pct(r.pago,r.contratado)+' pago',cls:'kpi-verde'},
+    {l:'Falta Receber',v:Rk(r.falta),n:'saldo dos empreiteiros',cls:'kpi-laranja'}
+  ].map(k=>`<div class="kpi ${k.cls||''}"><div class="kpi-label">${k.l}</div><div class="kpi-valor">${k.v}</div><div class="kpi-nota">${k.n}</div></div>`).join('');
+
+  const corpo=document.getElementById('corpo-empreiteiros');
+  if(!corpo)return;
+  corpo.innerHTML=lista.map((e,i)=>{
+    const contrato=Number(e.contrato||0);
+    const pago=Number(e.pago||0);
+    const falta=Math.max(contrato-pago,0);
+    const statusOpts=['Não iniciado','Em andamento','Aguardando pagamento','Pago','Cancelado'];
+    const st=e.status||'Não iniciado';
+    return `<tr>
+      <td><span class="cel-readonly">${i+1}</span></td>
+      <td><input class="cel" value="${e.nome||''}" onchange="editEmpreiteiro(${i},'nome',this.value)" placeholder="Nome do empreiteiro"></td>
+      <td><input class="cel" value="${e.servico||''}" onchange="editEmpreiteiro(${i},'servico',this.value)" placeholder="Serviço / função"></td>
+      <td><input class="cel cel-num" type="number" step="0.01" value="${contrato}" onchange="editEmpreiteiro(${i},'contrato',+this.value)"></td>
+      <td><input class="cel cel-num" type="number" step="0.01" value="${pago}" onchange="editEmpreiteiro(${i},'pago',+this.value)"></td>
+      <td><span class="cel-readonly">${R(falta)}</span></td>
+      <td><select class="sel-status ${sClass(st)}" onchange="editEmpreiteiro(${i},'status',this.value)">${statusOpts.map(s=>`<option ${st===s?'selected':''}>${s}</option>`).join('')}</select></td>
+      <td><input class="cel" value="${e.obs||''}" onchange="editEmpreiteiro(${i},'obs',this.value)" placeholder="Observação"></td>
+      <td><button class="btn-del-linha" onclick="delEmpreiteiro(${i})">✕</button></td>
+    </tr>`;
+  }).join('') + (lista.length?`<tr class="empr-total-row"><td colspan="3">Total</td><td style="text-align:right">${R(r.contratado)}</td><td style="text-align:right">${R(r.pago)}</td><td style="text-align:right">${R(r.falta)}</td><td colspan="3"></td></tr>`:'');
+}
+function novoEmpreiteiro(){
+  const o=obra(); garantirCamposObra(o);
+  o.empreiteiros.push({nome:'',servico:'',contrato:0,pago:0,status:'Não iniciado',obs:''});
+  salvar();
+  renderEmpreiteiros();
+  renderGeral();
+  setTimeout(()=>{const rows=document.querySelectorAll('#corpo-empreiteiros tr'); if(rows.length) rows[rows.length-1].querySelector('input')?.focus();},50);
+}
+function editEmpreiteiro(i,c,v){
+  const o=obra(); garantirCamposObra(o);
+  o.empreiteiros[i][c]=v;
+  salvar();
+  renderEmpreiteiros();
+  renderGeral();
+}
+function delEmpreiteiro(i){
+  if(confirm('Excluir este empreiteiro da obra atual?')){
+    obra().empreiteiros.splice(i,1);
+    salvar();
+    renderEmpreiteiros();
+    renderGeral();
+  }
+}
+
+function renderNFs(){
+  const nfs=obra().nfs||(obra().nfs=[]);
+  document.getElementById('corpo-nfs').innerHTML=nfs.map((n,i)=>`<tr><td><span class="cel-readonly">${i+1}</span></td><td><input class="cel" value="${n.nota||''}" onchange="editNF(${i},'nota',this.value)"></td><td><input class="cel cel-num" type="text" inputmode="decimal" value="${moedaInput(n.valor||0)}" onfocus="this.value=String(parseMoeda(this.value)).replace('.',',')" onchange="editNF(${i},'valor',parseMoeda(this.value))" onblur="this.value=moedaInput(parseMoeda(this.value))"></td><td><select class="cel" onchange="editNF(${i},'origem',this.value)">${opcoesOrigemNF(obra()).map(op=>`<option value="${op.id}" ${(origemNF(n))===op.id?'selected':''}>${op.label}</option>`).join('')}</select></td><td><input class="cel" type="date" value="${n.data||''}" onchange="editNF(${i},'data',this.value)"></td><td><select class="sel-status ${sClass(n.status)}" onchange="editNF(${i},'status',this.value)">${['PAGO','ATESTADA','EMITIDA','PENDENTE','CANCELADA'].map(s=>`<option ${(n.status||'')===s?'selected':''}>${s}</option>`).join('')}</select></td><td><input class="cel" value="${n.obs||''}" onchange="editNF(${i},'obs',this.value)" placeholder="Observação"></td><td><button class="btn-del-linha" onclick="delNF(${i})">✕</button></td></tr>`).join('');
+}
+function editNF(i,c,v){
+  if(c==='valor')v=arred2(v);
+  obra().nfs[i][c]=v;
+  salvar();
+  renderNFs();
+  renderObra();
+  renderGeral();
+  carregarConfig();
+}
+function novaNF(){obra().nfs.push({nota:'Nova NF',valor:0,origem:'Contrato',data:'',status:'PENDENTE',obs:''});salvar();renderNFs();renderObra();renderGeral();}
+function delNF(i){if(confirm('Excluir NF?')){obra().nfs.splice(i,1);salvar();renderNFs();renderObra();renderGeral();carregarConfig();}}
+function criarObraBase(nome){return {nome:nome||'Nova obra',responsavel:'',contrato:0,aditivos:[],medido:0,saldo:0,art:'',observacao:'',nfs:[],materiais:[],empreiteiros:[]};}
+function novaObra(){
+  const nome=prompt('Nome da nova obra:','Nova obra');
+  if(nome===null)return;
+  const nova=criarObraBase((nome||'Nova obra').trim()||'Nova obra');
+  D.push(nova);
+  obraAtual=D.length-1;
+  salvar();
+  init();
+  selecionarObra(obraAtual);
+  const abaConfig=document.querySelectorAll('.aba')[5];
+  if(abaConfig)abaConfig.click();
+  const campo=document.getElementById('cfg-nome');
+  if(campo)campo.focus();
+}
+function atualizarTotalContratoCfg(){
+  const c=+document.getElementById('cfg-contrato').value||0;
+  const totalAd=totalAditivosObra(obra());
+  const elAd=document.getElementById('cfg-total-aditivos'); if(elAd)elAd.textContent=R(totalAd);
+  const el=document.getElementById('cfg-contrato-total'); if(el)el.textContent=R(c+totalAd);
+  const saldo=Math.max(arred2(c+totalAd-resumoFinanceiro(obra()).emitido),0);
+  const se=document.getElementById('cfg-saldo'); if(se)se.value=R(saldo);
+}
+function carregarConfig(){
+  const o=obra(); garantirCamposObra(o);
+  document.getElementById('cfg-nome').value=o.nome||'';
+  document.getElementById('cfg-resp').value=o.responsavel||'';
+  document.getElementById('cfg-contrato').value=arred2(o.contrato||0).toFixed(2);
+  document.getElementById('cfg-medido').value=arred2(o.medido||0).toFixed(2);
+  document.getElementById('cfg-saldo').value=R(saldoCalculadoObra(o));
+  document.getElementById('cfg-art').value=o.art||'';
+  document.getElementById('cfg-obs').value=o.observacao||'';
+  renderAditivos();
+  atualizarTotalContratoCfg();
+}
+function salvarConfig(){
+  sincronizarAditivosDaTela();
+  const o=obra();
+  o.nome=document.getElementById('cfg-nome').value;
+  o.responsavel=document.getElementById('cfg-resp').value;
+  o.contrato=arred2(+document.getElementById('cfg-contrato').value||0);
+  o.medido=arred2(+document.getElementById('cfg-medido').value||0);
+  o.art=document.getElementById('cfg-art').value;
+  o.observacao=document.getElementById('cfg-obs').value;
+  o.saldo=saldoCalculadoObra(o);
+  salvar();init();selecionarObra(obraAtual);
+}
+function renderAditivos(){
+  const corpo=document.getElementById('corpo-aditivos'); if(!corpo)return;
+  const o=obra(); garantirCamposObra(o); const ads=aditivosObra(o);
+  const total=totalAditivosObra(o);
+  corpo.innerHTML=ads.map((a,i)=>`<tr data-aditivo-index="${i}">
+    <td><span class="cel-readonly">${i+1}</span></td>
+    <td><input class="cel" data-campo="numero" value="${a.numero||''}" oninput="atualizarAditivoLocal(${i},'numero',this.value);salvarAditivosDebounced()" onchange="editAditivo(${i},'numero',this.value)" placeholder="Aditivo 01"></td>
+    <td><input class="cel" data-campo="descricao" value="${a.descricao||''}" oninput="atualizarAditivoLocal(${i},'descricao',this.value);salvarAditivosDebounced()" onchange="editAditivo(${i},'descricao',this.value)" placeholder="Descrição do aditivo"></td>
+    <td><input class="cel" data-campo="data" type="date" value="${a.data||''}" oninput="atualizarAditivoLocal(${i},'data',this.value);salvarAditivosDebounced()" onchange="editAditivo(${i},'data',this.value)"></td>
+    <td><input class="cel cel-num" data-campo="valor" type="text" inputmode="decimal" value="${moedaInput(a.valor||0)}" onfocus="this.value=String(parseMoeda(this.value)).replace('.',',')" oninput="atualizarAditivoLocal(${i},'valor',this.value)" onchange="editAditivo(${i},'valor',parseMoeda(this.value))" onblur="editAditivo(${i},'valor',parseMoeda(this.value));this.value=moedaInput(obra().aditivos[${i}]?.valor||0)"></td>
+    <td><button class="btn-del-linha" onclick="delAditivo(${i})">✕</button></td>
+  </tr>`).join('') + `<tr class="empr-total-row"><td colspan="4">Total de aditivos</td><td style="text-align:right">${R(total)}</td><td></td></tr>`;
+  atualizarTotalContratoCfg();
+}
+function novoAditivo(){
+  const o=obra(); garantirCamposObra(o);
+  const i=o.aditivos.length+1;
+  o.aditivos.push({id:'aditivo_'+Date.now()+'_'+i,numero:'Aditivo '+String(i).padStart(2,'0'),descricao:'',data:'',valor:0});
+  salvar();renderAditivos();renderObra();renderGeral();renderNFs();
+}
+
+function atualizarAditivoLocal(i,c,v){
+  const o=obra(); garantirCamposObra(o);
+  if(!o.aditivos[i])return;
+  o.aditivos[i][c]=(c==='valor')?arred2(parseMoeda(v)):v;
+  if(c==='valor'){
+    atualizarTotalContratoCfg();
+    salvarAditivosDebounced();
+  }
+}
+function salvarAditivosDebounced(){
+  clearTimeout(ADITIVO_SAVE_TIMER);
+  ADITIVO_SAVE_TIMER=setTimeout(()=>{
+    sincronizarAditivosDaTela();
+    salvar();
+    renderObra();
+    renderGeral();
+    renderNFs();
+    carregarConfig();
+  }, 650);
+}
+function editAditivo(i,c,v){
+  const o=obra(); garantirCamposObra(o);
+  if(!o.aditivos[i])return;
+  if(c==='valor')v=arred2(v);
+  o.aditivos[i][c]=v;
+  sincronizarAditivosDaTela();
+  salvar();
+  renderAditivos();renderObra();renderGeral();renderNFs();carregarConfig();
+}
+function delAditivo(i){
+  const o=obra(); garantirCamposObra(o); const ad=o.aditivos[i];
+  if(!confirm('Excluir este aditivo? As NFs vinculadas a ele voltarão para Contrato.'))return;
+  (o.nfs||[]).forEach(n=>{if(n.origem===ad.id)n.origem='Contrato';});
+  o.aditivos.splice(i,1);
+  salvar();renderAditivos();renderObra();renderGeral();renderNFs();carregarConfig();
+}
+function inicializarDashboard(){
+  if (temWebApp()) {
+    fetch(SHEETS_WEBAPP_URL + '?action=carregar')
+      .then(r => r.json())
+      .then(function(resp){
+        try {
+          if (resp && resp.ok && resp.data) D = JSON.parse(resp.data);
+          else {
+            const local = localStorage.getItem(CHAVE);
+            if(local) D = JSON.parse(local);
+          }
+        } catch(e) { D = DADOS_ORIGINAIS; }
+        CARREGOU_APPS_SCRIPT = true;
+        init();
+      })
+      .catch(function(){
+        try { D = JSON.parse(localStorage.getItem(CHAVE)||'null') || DADOS_ORIGINAIS; } catch(e) { D = DADOS_ORIGINAIS; }
+        init();
+      });
+  } else {
+    try { D = JSON.parse(localStorage.getItem(CHAVE)||'null') || DADOS_ORIGINAIS; } catch(e) { D = DADOS_ORIGINAIS; }
+    init();
+  }
+}
+inicializarDashboard();
+</script>
+</body>
+</html>
